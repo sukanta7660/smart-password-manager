@@ -1,3 +1,1 @@
-<?php
-
-echo "<h1> Folders</h1>";
+<div id="app"></div>
