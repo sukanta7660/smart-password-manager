@@ -40,6 +40,41 @@ class SmartPasswordManager {
   function register(): void
   {
       add_action('admin_enqueue_scripts', array( $this, 'enqueue' ));
+
+      add_action('admin_menu', array( $this, 'addAdminPages' ));
+  }
+
+  public function addAdminPages(): void
+  {
+        add_menu_page(
+            'Folders || Smart Password Manager ',
+            'Folders',
+            'manage_options',
+            'smart_password_manager_folders',
+            array( $this, 'folder_index' ),
+            'dashicons-open-folder',
+            110
+        );
+
+      add_menu_page(
+          'Credentials || Smart Password Manager',
+          'Credentials',
+          'manage_options',
+          'smart_password_manager_credentials',
+          array( $this, 'credential_index' ),
+          'dashicons-vault',
+          110
+      );
+  }
+
+  public function folder_index() :void
+  {
+        require_once plugin_dir_path(__FILE__) . 'pages/folder/index.php';
+  }
+
+  public function credential_index() :void
+  {
+      require_once plugin_dir_path(__FILE__) . 'pages/credential/index.php';
   }
 
   function activate(): void
