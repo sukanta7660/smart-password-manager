@@ -47,29 +47,38 @@ class SmartPasswordManager {
   public function addAdminPages(): void
   {
         add_menu_page(
-            'Folders || Smart Password Manager ',
-            'Folders',
+            'Smart Password Manager',
+            'SPM',
             'manage_options',
-            'smart_password_manager_folders',
-            array( $this, 'folder_index' ),
-            'dashicons-open-folder',
+            'smart_password_manager',
+            array( $this, 'plugin_index' ),
+            'dashicons-vault',
             110
         );
 
-      add_menu_page(
-          'Credentials || Smart Password Manager',
-          'Credentials',
+      add_submenu_page(
+          'smart_password_manager',
+          'Folders',
+          'Folder',
           'manage_options',
-          'smart_password_manager_credentials',
-          array( $this, 'credential_index' ),
-          'dashicons-vault',
-          110
+          'smart_password_manager#/folders'
       );
+
+      add_submenu_page(
+          'smart_password_manager',
+          'Credential',
+          'Credential',
+          'manage_options',
+          'smart_password_manager#/credentials'
+      );
+
+      remove_submenu_page( 'smart_password_manager', 'smart_password_manager' );
+
   }
 
-  public function folder_index() :void
+  public function plugin_index() :void
   {
-      require_once plugin_dir_path(__FILE__) . 'pages/folder/index.php';
+      require_once plugin_dir_path(__FILE__) . 'pages/index.php';
 
       wp_enqueue_style('customStyle', plugins_url('/public/css/custom.css', __FILE__ ));
       wp_enqueue_script('mainScript', plugins_url('/public/js/main.js', __FILE__ ));
@@ -79,6 +88,7 @@ class SmartPasswordManager {
   {
       require_once plugin_dir_path(__FILE__) . 'pages/credential/index.php';
 
+      wp_enqueue_style('customStyle', plugins_url('/public/css/custom.css', __FILE__ ));
       wp_enqueue_script('mainScript', plugins_url('/public/js/main.js', __FILE__ ));
   }
 
