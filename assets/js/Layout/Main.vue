@@ -1,15 +1,11 @@
 <template>
   <div>
-      <div class="nav-links">
-          <router-link to="/folders">Folder</router-link>
-          <router-link to="/credentials">Credential</router-link>
-      </div>
       <router-view></router-view>
   </div>
 </template>
 
 <script setup>
-import {reactive, toRef} from 'vue';
+import {reactive} from 'vue';
 
 const state = reactive({
     txt: 'Main'

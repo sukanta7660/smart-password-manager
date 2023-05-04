@@ -33,8 +33,10 @@ if (!defined('ABSPATH')) {
 
 class SmartPasswordManager {
 
+    public string $plugin;
+
   function __construct() {
-    add_action('init', array($this, 'custom_post_type'));
+      $this->plugin = plugin_basename(__FILE__);
   }
 
   function register(): void
@@ -42,6 +44,8 @@ class SmartPasswordManager {
       add_action('admin_enqueue_scripts', array( $this, 'enqueue' ));
 
       add_action('admin_menu', array( $this, 'addAdminPages' ));
+
+
   }
 
   public function addAdminPages(): void
@@ -53,7 +57,7 @@ class SmartPasswordManager {
             'smart_password_manager',
             array( $this, 'plugin_index' ),
             'dashicons-vault',
-            110
+            10
         );
 
       add_submenu_page(
@@ -61,7 +65,8 @@ class SmartPasswordManager {
           'Folders',
           'Folder',
           'manage_options',
-          'smart_password_manager#/folders'
+          'smart_password_manager#/folders',
+          array( $this, 'plugin_index' ),
       );
 
       add_submenu_page(
@@ -69,24 +74,15 @@ class SmartPasswordManager {
           'Credential',
           'Credential',
           'manage_options',
-          'smart_password_manager#/credentials'
+          'smart_password_manager#/credentials',
+          array( $this, 'plugin_index' ),
       );
-
-      remove_submenu_page( 'smart_password_manager', 'smart_password_manager' );
 
   }
 
   public function plugin_index() :void
   {
       require_once plugin_dir_path(__FILE__) . 'pages/index.php';
-
-      wp_enqueue_style('customStyle', plugins_url('/public/css/custom.css', __FILE__ ));
-      wp_enqueue_script('mainScript', plugins_url('/public/js/main.js', __FILE__ ));
-  }
-
-  public function credential_index() :void
-  {
-      require_once plugin_dir_path(__FILE__) . 'pages/credential/index.php';
 
       wp_enqueue_style('customStyle', plugins_url('/public/css/custom.css', __FILE__ ));
       wp_enqueue_script('mainScript', plugins_url('/public/js/main.js', __FILE__ ));
@@ -103,11 +99,6 @@ class SmartPasswordManager {
   function deactivate(): void
   {
     flush_rewrite_rules();
-  }
-
-  function custom_post_type(): void
-  {
-    register_post_type('folder', ['public' => true, 'label' => 'Folders']);
   }
 
   function createTables(): void
@@ -157,15 +148,15 @@ class SmartPasswordManager {
 
 }
 
-if ( class_exists('SmartPasswordManager') ) {
+add_action('init', function () {
+    if ( class_exists('SmartPasswordManager') ) {
+        $smartPasswordManager = new SmartPasswordManager();
+        $smartPasswordManager->register();
+    }
+});
 
-  $smartPasswordManager = new SmartPasswordManager();
-  $smartPasswordManager->register();
-
-}
-
-// Activation
-register_activation_hook(__FILE__, array( $smartPasswordManager, 'activate'));
-
-// Deactivation
-register_deactivation_hook(__FILE__, array( $smartPasswordManager, 'deactivate'));
+//// Activation
+//register_activation_hook(__FILE__, array( $smartPasswordManager, 'activate'));
+//
+//// Deactivation
+//register_deactivation_hook(__FILE__, array( $smartPasswordManager, 'deactivate'));

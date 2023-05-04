@@ -2,8 +2,15 @@ import {createRouter, createWebHashHistory} from 'vue-router';
 
 import FolderMain from '../pages/Folder/Folder.vue';
 import CredentialMain from '../pages/Credential/Credential.vue';
+import Dashboard from '../pages/Dashboard.vue';
 
 const routes = [
+    {
+        path: '/',
+        publicPath: '/',
+        name: 'Dashboard',
+        component: Dashboard
+    },
     {
         path: '/folders',
         publicPath: '/',
@@ -20,8 +27,7 @@ const routes = [
 ];
 
 const router = createRouter({
-    history: createWebHashHistory(process.env.BASE_URL),
-    mode: 'history',
+    history: createWebHashHistory(),
     routes
 })
 
