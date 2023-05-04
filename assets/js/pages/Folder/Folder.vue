@@ -6,15 +6,19 @@
           <el-button type="primary">Add New</el-button>
       </el-row>
 
-      <el-row class="mt-4">
-          <el-table :data="tableData" style="width: 98%">
-              <el-table-column prop="name" label="Name" />
-              <el-table-column prop="address" label="Address" />
-              <el-table-column label="Action" >
-                  <el-button type="primary">Edit</el-button>
-                  <el-button type="danger">Delete</el-button>
-              </el-table-column>
-          </el-table>
+      <el-row :gutter="20" class="mt-4" style="width: 100%">
+          <el-col :span="24">
+              <el-card>
+              <el-table :data="tableData">
+                  <el-table-column prop="name" label="Name" />
+                  <el-table-column prop="address" label="Address" />
+                  <el-table-column label="Action" >
+                      <el-button type="primary">Edit</el-button>
+                      <el-button type="danger">Delete</el-button>
+                  </el-table-column>
+              </el-table>
+              </el-card>
+          </el-col>
       </el-row>
   </div>
 </template>
