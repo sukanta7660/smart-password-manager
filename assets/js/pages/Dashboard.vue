@@ -1,7 +1,5 @@
 <template>
-  <el-row class="mt-4">
-      <Breadcrumb current-page="Dashboard"/>
-  </el-row>
+    <Breadcrumb current-page="Dashboard"/>
 </template>
 
 <script setup>

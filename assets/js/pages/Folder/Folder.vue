@@ -1,8 +1,6 @@
 <template>
-  <div>
-      <el-row class="mt-4">
-          <Breadcrumb current-page="Folders"/>
-      </el-row>
+  <div id="folder-div">
+      <Breadcrumb current-page="Folders"/>
 
       <el-row class="mt-4">
           <el-button type="primary">Add New</el-button>

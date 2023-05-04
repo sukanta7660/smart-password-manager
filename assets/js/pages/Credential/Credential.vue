@@ -1,8 +1,6 @@
 <template>
     <div>
-        <el-row class="mt-4">
-            <Breadcrumb current-page="Credential"/>
-        </el-row>
+        <Breadcrumb current-page="Credential"/>
 
         <el-row class="mt-4">
             <el-button type="primary">Add New</el-button>
