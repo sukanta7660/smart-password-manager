@@ -1,6 +1,11 @@
 import { createApp } from 'vue'
-import FolderMain from './mainLayout/Folder.vue';
+import App from './Layout/Main.vue';
 
-const app = createApp(FolderMain, {});
+import ElementPlus from 'element-plus';
+import 'element-plus/dist/index.css';
 
-app.mount('#app');
+import router from './router';
+
+const app = createApp(App, {});
+
+app.use(router).use(ElementPlus).mount('#app');

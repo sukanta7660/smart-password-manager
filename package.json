@@ -9,10 +9,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "element-plus": "^2.3.4",
     "laravel-mix": "^6.0.49",
-    "sass": "^1.62.1",
     "vue": "^3.2.47",
     "vue-loader": "^17.1.0",
+    "vue-router": "^4.1.6",
     "vue-template-compiler": "^2.7.14"
+  },
+  "devDependencies": {
+    "resolve-url-loader": "^5.0.0",
+    "sass": "^1.62.1",
+    "sass-loader": "^13.2.2",
+    "webpack": "^5.82.0"
   }
 }

@@ -71,12 +71,15 @@ class SmartPasswordManager {
   {
       require_once plugin_dir_path(__FILE__) . 'pages/folder/index.php';
 
-      wp_enqueue_script('folderScript', plugins_url('/public/js/main.js', __FILE__, ));
+      wp_enqueue_style('customStyle', plugins_url('/public/css/custom.css', __FILE__ ));
+      wp_enqueue_script('mainScript', plugins_url('/public/js/main.js', __FILE__ ));
   }
 
   public function credential_index() :void
   {
       require_once plugin_dir_path(__FILE__) . 'pages/credential/index.php';
+
+      wp_enqueue_script('mainScript', plugins_url('/public/js/main.js', __FILE__ ));
   }
 
   function activate(): void

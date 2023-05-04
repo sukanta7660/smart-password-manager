@@ -1,3 +1,1 @@
-<?php
-
-echo "<h1> Credentials </h1>";
+<div id="app"></div>
