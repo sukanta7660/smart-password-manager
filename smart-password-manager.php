@@ -153,10 +153,10 @@ add_action('init', function () {
         $smartPasswordManager = new SmartPasswordManager();
         $smartPasswordManager->register();
     }
-});
 
-//// Activation
-//register_activation_hook(__FILE__, array( $smartPasswordManager, 'activate'));
-//
-//// Deactivation
-//register_deactivation_hook(__FILE__, array( $smartPasswordManager, 'deactivate'));
+    // Activation
+    register_activation_hook(__FILE__, array( $smartPasswordManager, 'activate'));
+
+// Deactivation
+    register_deactivation_hook(__FILE__, array( $smartPasswordManager, 'deactivate'));
+});
