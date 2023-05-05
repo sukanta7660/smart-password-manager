@@ -11,7 +11,7 @@
                     Total User
                 </h1>
                 <h1>
-                    {{ state.users.length }}
+                    {{ state.users }}
                 </h1>
             </el-card>
         </el-col>
@@ -24,7 +24,7 @@
                     Total Folder
                 </h1>
                 <h1>
-                    {{ state.users.length }}
+                    {{ state.folders }}
                 </h1>
             </el-card>
         </el-col>
@@ -37,7 +37,7 @@
                     Total Credential
                 </h1>
                 <h1>
-                    {{ state.users.length }}
+                    {{ state.users }}
                 </h1>
             </el-card>
         </el-col>
@@ -50,12 +50,13 @@
   import axios from 'axios';
 
   const state = reactive({
-      users: [],
-      posts: [],
+      users: 0,
+      posts: 0,
+      folders: 0
 
   });
 
-  const fetchFolders = ()=> {
+  const fetchFolders = () => {
       const dataToSubmit = {
           action: 'get_folder',
       }
@@ -66,8 +67,8 @@
           url: ajaxUrl,
           data: dataToSubmit,
           method: 'POST'
-      }).done((response)=> {
-          console.log(response);
+      }).done((response) => {
+          state.folders = response?.length
       });
   }
 
@@ -83,7 +84,7 @@
           url: ajaxUrl,
           data: dataToSubmit,
           method: 'POST'
-      }).done((res)=> {
+      }).done((res) => {
           console.log(res);
       });
   };

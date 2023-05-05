@@ -9,9 +9,9 @@
       <el-row :gutter="20" class="mt-4" style="width: 100%">
           <el-col :span="24">
               <el-card>
-              <el-table :data="tableData">
-                  <el-table-column prop="name" label="Name" />
-                  <el-table-column prop="address" label="Address" />
+              <el-table :data="state.tableData">
+                  <el-table-column prop="created_at" label="Date" />
+                  <el-table-column prop="folder" label="Name" />
                   <el-table-column label="Action" >
                       <el-button type="primary">Edit</el-button>
                       <el-button type="danger">Delete</el-button>
@@ -24,43 +24,58 @@
 </template>
 
 <script setup>
-import {reactive} from 'vue';
+import {onMounted, reactive} from 'vue';
 import Breadcrumb from "../../components/Utils/BreadCrumb.vue";
+import {formatDateTime} from '../../utils/helpers';
 
-const state = reactive({
-    txt: 'Main'
-});
+    const state = reactive({
+        folders: [],
+        tableData: []
+    });
 
-const tableData = [
-    {
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    }
-];
+    const fetchFolders = () => {
+
+        const dataToSubmit = {
+            action: 'get_folder',
+        }
+
+        const ajaxUrl = window.ajax_object.ajax_url;
+
+        window.jQuery.ajax({
+            url: ajaxUrl,
+            data: dataToSubmit,
+            method: 'POST'
+        }).done((response) => {
+            state.folders = response;
+            formatFolderTableData(response);
+        });
+
+   }
+
+   const formatFolderTableData = (data = []) => {
+        if (!data.length) {
+            return;
+        }
+
+       state.tableData = data.map((folder) => {
+           return {
+               id: folder.id,
+               folder: folder.name,
+               user: folder.display_name,
+               created_at: formatDateTime(folder.created_at)
+           }
+       });
+
+   };
+
+    const getData = () => {
+        fetchFolders();
+    };
+
+    onMounted(() => {
+        getData();
+    });
+
 </script>
 
 <style lang="scss">

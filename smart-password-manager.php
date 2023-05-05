@@ -38,11 +38,25 @@ class SmartPasswordManager {
   function __construct() {
       $this->plugin = plugin_basename(__FILE__);
       add_action( 'wp_ajax_get_folder', [$this, 'getFolderLists']);
+      add_action( 'wp_ajax_get_credential', [$this, 'getCredentialLists']);
   }
 
     public function getFolderLists()
     {
-        return wp_send_json('it works!');
+        global $wpdb;
+        $folderTableName = 'wp_folders';
+        $userTableName = 'wp_users';
+        $folders = $wpdb->get_results ( "SELECT * FROM $folderTableName, wp_users WHERE $userTableName.ID = $folderTableName.user_id ");
+        return wp_send_json($folders);
+    }
+
+    public function getCredentialLists()
+    {
+        global $wpdb;
+        $credentialTableName = 'wp_credentials';
+        $userTableName = 'wp_users';
+        $credentials = $wpdb->get_results ( "SELECT * FROM $credentialTableName, $userTableName WHERE $userTableName.ID = $credentialTableName.user_id ");
+        return wp_send_json($credentials);
     }
 
   function register(): void
@@ -50,7 +64,7 @@ class SmartPasswordManager {
       add_action('admin_enqueue_scripts', array( $this, 'enqueue' ));
 
       add_action('admin_menu', array( $this, 'addAdminPages' ));
-      
+
   }
 
   public function addAdminPages(): void
@@ -99,6 +113,9 @@ class SmartPasswordManager {
     // tables Create
     $this->createTables();
 
+    // insert data
+    $this->insertData();
+
     flush_rewrite_rules();
   }
 
@@ -114,10 +131,14 @@ class SmartPasswordManager {
       $credentialTableName = $wpdb->prefix . 'credentials';
       $charsetCollate = $wpdb->get_charset_collate();
 
+      $user = wp_get_current_user();
+
       $folderTable = "CREATE TABLE IF NOT EXISTS $folderTableName(
                 `id` int NOT NULL AUTO_INCREMENT,
                 `user_id` int NOT NULL,
                 `name` varchar(255),
+                `created_at` TIMESTAMP,
+                `updated_at` TIMESTAMP,
                 PRIMARY KEY (`id`)
         ) $charsetCollate";
 
@@ -129,8 +150,10 @@ class SmartPasswordManager {
                 `name` varchar(255) NOT NULL,
                 `username` varchar(255),
                 `password` varchar(255),
-                url varchar(255),
-                notes LONGTEXT,
+                `url` LONGTEXT,
+                `notes` LONGTEXT,
+                `created_at` TIMESTAMP,
+                `updated_at` TIMESTAMP,
                 PRIMARY KEY (`id`)
         ) $charsetCollate";
 
@@ -138,12 +161,51 @@ class SmartPasswordManager {
 
       try {
 
+          /*----- creating tables -----*/
           dbDelta( $folderTable );
           dbDelta( $credentialTable );
-          error_log('Tables are created');
+          /*-----/ creating tables -----*/
 
       } catch (Exception $exception) {
           error_log('Something Went Wrong');
+      }
+  }
+
+  function insertData(): void
+  {
+      global $wpdb;
+      $folderTableName = $wpdb->prefix . 'folders';
+      $credentialTableName = $wpdb->prefix . 'credentials';
+
+      $user = wp_get_current_user();
+
+      /*----- Folder data -----*/
+      $folderData = "INSERT INTO $folderTableName(`user_id`, `name`, `created_at`, `updated_at`) 
+                                VALUES ($user->ID, 'Google', NOW(), NOW()),
+                                ($user->ID, 'Facebook', NOW(), NOW()),
+                                ($user->ID, 'Instagram', NOW(), NOW()),
+                                ($user->ID, 'Discord', NOW(), NOW())
+                                ";
+      /*-----/ Folder data -----*/
+
+      /*----- Credential data -----*/
+      $credentialData = "INSERT INTO $credentialTableName(`user_id`, `item_type`, `name`, `username`, `password`, `url`, `created_at`, `updated_at`) 
+                                VALUES ($user->ID, 'card', 'Sukanta Purkayastha', 'sukanta344', '12345678', 'https://youtu.be/gDOFDwgXrew', NOW(), NOW()),
+                                ($user->ID, 'login', 'Sukanta', 'sukanta7660', '12345678', 'https://youtu.be/gDOFDwgXrew', NOW(), NOW()),
+                                ($user->ID, 'login', 'Sukanta Showrav', 'sukanta7660', '12345678', 'https://youtu.be/gDOFDwgXrew', NOW(), NOW())
+                                ";
+      /*-----/ Credential data -----*/
+
+      // execute
+      $folderDataExists = "SELECT * FROM $folderTableName";
+      $credentialDataExists = "SELECT * FROM $credentialTableName";
+
+      if (count($wpdb->get_results($folderDataExists)) < 1) {
+          $wpdb->get_results($folderData);
+      }
+
+      if (count($wpdb->get_results($credentialDataExists)) < 1) {
+          $wpdb->get_results($credentialData);
       }
   }
 
