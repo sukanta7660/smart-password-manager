@@ -55,9 +55,37 @@
 
   });
 
-  const handleGetUserData = async () => {
-      let response = await axios.get('/wp-json/wp/v2/users');
-      state.users = response.data;
+  const fetchFolders = ()=> {
+      const dataToSubmit = {
+          action: 'get_folder',
+      }
+
+      const ajaxUrl = window.ajax_object.ajax_url;
+
+      window.jQuery.ajax({
+          url: ajaxUrl,
+          data: dataToSubmit,
+          method: 'POST'
+      }).done((response)=> {
+          console.log(response);
+      });
+  }
+
+  const handleGetUserData = () => {
+
+      const dataToSubmit = {
+          action: 'get_folder',
+      }
+
+      const ajaxUrl = window.ajax_object.ajax_url;
+
+      window.jQuery.ajax({
+          url: ajaxUrl,
+          data: dataToSubmit,
+          method: 'POST'
+      }).done((res)=> {
+          console.log(res);
+      });
   };
 
   const handleGetPostData = async () => {
@@ -68,6 +96,7 @@
   const getData = () => {
       handleGetUserData();
       handleGetPostData();
+      fetchFolders();
   };
 
   onMounted(() => {

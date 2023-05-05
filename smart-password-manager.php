@@ -37,15 +37,20 @@ class SmartPasswordManager {
 
   function __construct() {
       $this->plugin = plugin_basename(__FILE__);
+      add_action( 'wp_ajax_get_folder', [$this, 'getFolderLists']);
   }
+
+    public function getFolderLists()
+    {
+        return wp_send_json('it works!');
+    }
 
   function register(): void
   {
       add_action('admin_enqueue_scripts', array( $this, 'enqueue' ));
 
       add_action('admin_menu', array( $this, 'addAdminPages' ));
-
-
+      
   }
 
   public function addAdminPages(): void
@@ -86,6 +91,7 @@ class SmartPasswordManager {
 
       wp_enqueue_style('customStyle', plugins_url('/public/css/custom.css', __FILE__ ));
       wp_enqueue_script('mainScript', plugins_url('/public/js/main.js', __FILE__ ));
+      wp_localize_script( 'mainScript', 'ajax_object', ['ajax_url' => admin_url( 'admin-ajax.php' ), 'we_value' => 1234 ] );
   }
 
   function activate(): void
@@ -148,15 +154,13 @@ class SmartPasswordManager {
 
 }
 
-add_action('init', function () {
-    if ( class_exists('SmartPasswordManager') ) {
-        $smartPasswordManager = new SmartPasswordManager();
-        $smartPasswordManager->register();
-    }
+  if ( class_exists('SmartPasswordManager') ) {
+    $smartPasswordManager = new SmartPasswordManager();
+    $smartPasswordManager->register();
+  }
 
-    // Activation
-    register_activation_hook(__FILE__, array( $smartPasswordManager, 'activate'));
+  // Activation
+  register_activation_hook(__FILE__, array( $smartPasswordManager, 'activate'));
 
-// Deactivation
-    register_deactivation_hook(__FILE__, array( $smartPasswordManager, 'deactivate'));
-});
+  // Deactivation
+  register_deactivation_hook(__FILE__, array( $smartPasswordManager, 'deactivate'));
