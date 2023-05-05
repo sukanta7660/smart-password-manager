@@ -3,7 +3,9 @@
       <Breadcrumb current-page="Folders"/>
 
       <el-row class="mt-4">
-          <el-button type="primary">Add New</el-button>
+          <el-button type="primary" @click="state.isModalOpened = true">
+              Add New
+          </el-button>
       </el-row>
 
       <el-row :gutter="20" class="mt-4" style="width: 100%">
@@ -20,6 +22,8 @@
               </el-card>
           </el-col>
       </el-row>
+
+      <FolderForm :modal-show="state.isModalOpened"/>
   </div>
 </template>
 
@@ -27,10 +31,12 @@
 import {onMounted, reactive} from 'vue';
 import Breadcrumb from "../../components/Utils/BreadCrumb.vue";
 import {formatDateTime} from '../../utils/helpers';
+import FolderForm from '../../components/Folder/FolderForm.vue';
 
     const state = reactive({
         folders: [],
-        tableData: []
+        tableData: [],
+        isModalOpened: false
     });
 
     const fetchFolders = () => {
