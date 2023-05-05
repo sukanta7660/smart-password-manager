@@ -37,7 +37,7 @@
                     Total Credential
                 </h1>
                 <h1>
-                    {{ state.users }}
+                    {{ state.credentials }}
                 </h1>
             </el-card>
         </el-col>
@@ -51,9 +51,8 @@
 
   const state = reactive({
       users: 0,
-      posts: 0,
-      folders: 0
-
+      folders: 0,
+      credentials: 0
   });
 
   const fetchFolders = () => {
@@ -72,10 +71,10 @@
       });
   }
 
-  const handleGetUserData = () => {
+  const fetchCredentials = () => {
 
       const dataToSubmit = {
-          action: 'get_folder',
+          action: 'get_credential',
       }
 
       const ajaxUrl = window.ajax_object.ajax_url;
@@ -84,19 +83,13 @@
           url: ajaxUrl,
           data: dataToSubmit,
           method: 'POST'
-      }).done((res) => {
-          console.log(res);
+      }).done((response) => {
+          state.credentials = response.length
       });
   };
 
-  const handleGetPostData = async () => {
-      let response = await axios.get('/wp-json/wp/v2/posts');
-      state.posts = response.data;
-  };
-
   const getData = () => {
-      handleGetUserData();
-      handleGetPostData();
+      fetchCredentials();
       fetchFolders();
   };
 
