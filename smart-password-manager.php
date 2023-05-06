@@ -60,7 +60,7 @@ class SmartPasswordManager {
         $name = $_POST['name'];
 
         $wpdb->insert($folderTableName, [
-            'user_id'   => $user->ID,
+           'user_id'    => $user->ID,
            'name'       => $name,
            'created_at' => date('Y-m-d H:i:s'),
            'updated_at' => date('Y-m-d H:i:s'),
