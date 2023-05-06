@@ -3,7 +3,7 @@
       <Breadcrumb current-page="Folders"/>
 
       <el-row class="mt-4">
-          <el-button type="primary" @click="state.isModalOpened = true">
+          <el-button type="primary" @click="handleCreateFolder">
               Add New
           </el-button>
       </el-row>
@@ -15,15 +15,31 @@
                   <el-table-column prop="created_at" label="Date" />
                   <el-table-column prop="folder" label="Name" />
                   <el-table-column label="Action" >
-                      <el-button type="primary">Edit</el-button>
-                      <el-button type="danger">Delete</el-button>
+                      <template #default="scope">
+                          <el-button
+                              type="primary"
+                              @click="handleAction('edit', scope.row)"
+                          >
+                              Edit
+                          </el-button>
+                          <el-button
+                              @click="handleAction('delete', scope.row)"
+                              type="danger">
+                              Delete
+                          </el-button>
+                      </template>
                   </el-table-column>
               </el-table>
               </el-card>
           </el-col>
       </el-row>
 
-      <FolderForm :modal-show="state.isModalOpened"/>
+      <FolderForm
+          :modal-show="state.showCreateUpdate"
+          :folder="state.selectedField"
+          :is-updating="state.isUpdating"
+          :close-modal-handler="closeModalHandler"
+      />
   </div>
 </template>
 
@@ -36,7 +52,9 @@ import FolderForm from '../../components/Folder/FolderForm.vue';
     const state = reactive({
         folders: [],
         tableData: [],
-        isModalOpened: false
+        showCreateUpdate: false,
+        isUpdating: false,
+        selectedField: {}
     });
 
     const fetchFolders = () => {
@@ -73,6 +91,34 @@ import FolderForm from '../../components/Folder/FolderForm.vue';
        });
 
    };
+
+   const closeModalHandler = () => {
+       state.showCreateUpdate = false;
+       state.isUpdating = false;
+       state.selectedField = {};
+   };
+
+   const handleCreateFolder = () => {
+       state.showCreateUpdate = !state.showCreateUpdate;
+       state.isUpdating = false;
+       state.selectedField = {};
+
+   };
+
+   const handleAction = (action, data) => {
+       state.selectedField = data;
+
+       if (action === 'edit') {
+           state.isUpdating = true;
+           state.showCreateUpdate = true;
+       }
+
+       if (action === 'delete') {
+           console.log(action);
+       }
+   };
+
+   // const modalCreate
 
     const getData = () => {
         fetchFolders();
