@@ -1,6 +1,9 @@
 .mt-4 {
   margin-top: 20px;
 }
+.ptb-10 {
+  padding: 10px 0;
+}
 .el-row {
   margin-bottom: 20px;
 }
@@ -22,4 +25,10 @@
 //element plus customize
 .el-input__wrapper {
   padding: 0 !important;
+}
+
+.dialog-footer-btns {
+  display: flex;
+  justify-content: end;
+  margin-top: 2rem;
 }

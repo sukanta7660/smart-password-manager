@@ -13,6 +13,7 @@
     "dayjs": "^1.11.7",
     "element-plus": "^2.3.4",
     "laravel-mix": "^6.0.49",
+    "sweetalert2": "^11.7.5",
     "vue": "^3.2.47",
     "vue-loader": "^17.1.0",
     "vue-router": "^4.1.6",

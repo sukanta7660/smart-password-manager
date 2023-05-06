@@ -1,9 +1,13 @@
 <template>
-    <div id="folder-div">
+    <div id="credential-div">
         <Breadcrumb current-page="Credential"/>
 
         <el-row class="mt-4">
-            <el-button type="primary">Add New</el-button>
+            <el-button
+                @click="handleCreateCredential"
+                type="primary">
+                Add New
+            </el-button>
         </el-row>
 
         <el-row :gutter="20" class="mt-4" style="width: 100%">
@@ -15,13 +19,31 @@
                         <el-table-column prop="name" label="Name" />
                         <el-table-column prop="username" label="Username" />
                         <el-table-column label="Action" >
-                            <el-button type="primary">Edit</el-button>
-                            <el-button type="danger">Delete</el-button>
+                            <template #default="scope">
+                                <el-button
+                                    type="primary"
+                                    @click="handleAction('edit', scope.row)"
+                                >
+                                    Edit
+                                </el-button>
+                                <el-button
+                                    @click="handleAction('delete', scope.row)"
+                                    type="danger">
+                                    Delete
+                                </el-button>
+                            </template>
                         </el-table-column>
                     </el-table>
                 </el-card>
             </el-col>
         </el-row>
+
+        <CredentialForm
+            :modal-show="state.showCreateUpdate"
+            :credential="state.selectedField"
+            :is-updating="state.isUpdating"
+            :close-modal-handler="closeModalHandler"
+        />
     </div>
 </template>
 
@@ -29,10 +51,14 @@
 import {onMounted, reactive} from 'vue';
 import Breadcrumb from "../../components/Utils/BreadCrumb.vue";
 import {formatDateTime} from '../../utils/helpers';
+import CredentialForm from '../../components/Credential/CredentialForm.vue';
 
 const state = reactive({
     credentials: [],
-    tableData: []
+    tableData: [],
+    showCreateUpdate: false,
+    isUpdating: false,
+    selectedField: {}
 });
 
 const fetchCredentials = () => {
@@ -49,12 +75,12 @@ const fetchCredentials = () => {
         method: 'POST'
     }).done((response) => {
         state.credentials = response;
-        formatFolderTableData(response);
+        formatCredentialTableData(response);
     });
 
 }
 
-const formatFolderTableData = (data = []) => {
+const formatCredentialTableData = (data = []) => {
     if (!data.length) {
         return;
     }
@@ -64,12 +90,41 @@ const formatFolderTableData = (data = []) => {
             id: credential.id,
             name: credential.name,
             username: credential.username,
+            password: credential.password,
+            url: credential.url,
+            notes: credential.notes,
             type: credential.item_type,
             user: credential.display_name,
             created_at: formatDateTime(credential.created_at)
         }
     });
 
+};
+
+const closeModalHandler = () => {
+    state.showCreateUpdate = false;
+    state.isUpdating = false;
+    state.selectedField = {};
+};
+
+const handleCreateCredential = () => {
+    state.showCreateUpdate = !state.showCreateUpdate;
+    state.isUpdating = false;
+    state.selectedField = {};
+
+};
+
+const handleAction = (action, data) => {
+    state.selectedField = data;
+
+    if (action === 'edit') {
+        state.isUpdating = true;
+        state.showCreateUpdate = true;
+    }
+
+    if (action === 'delete') {
+        console.log(action);
+    }
 };
 
 const getData = () => {

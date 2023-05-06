@@ -38,19 +38,44 @@ class SmartPasswordManager {
   function __construct() {
       $this->plugin = plugin_basename(__FILE__);
       add_action( 'wp_ajax_get_folder', [$this, 'getFolderLists']);
+      add_action( 'wp_ajax_create_folder', [$this, 'createFolder']);
+      add_action( 'wp_ajax_delete_folder', [$this, 'deleteFolder']);
       add_action( 'wp_ajax_get_credential', [$this, 'getCredentialLists']);
   }
 
-    public function getFolderLists()
+  public function getFolderLists()
+  {
+    global $wpdb;
+    $folderTableName = 'wp_folders';
+    $userTableName = 'wp_users';
+    $folders = $wpdb->get_results ( "SELECT * FROM $folderTableName, wp_users WHERE $userTableName.ID = $folderTableName.user_id ");
+    return wp_send_json($folders);
+  }
+
+    public function createFolder()
     {
         global $wpdb;
         $folderTableName = 'wp_folders';
-        $userTableName = 'wp_users';
-        $folders = $wpdb->get_results ( "SELECT * FROM $folderTableName, wp_users WHERE $userTableName.ID = $folderTableName.user_id ");
-        return wp_send_json($folders);
+        $user = wp_get_current_user();
+        $name = $_POST['name'];
+
+        $wpdb->insert($folderTableName, [
+            'user_id'   => $user->ID,
+           'name'       => $name,
+           'created_at' => date('Y-m-d H:i:s'),
+           'updated_at' => date('Y-m-d H:i:s'),
+        ]);
     }
 
-    public function getCredentialLists()
+  public function deleteFolder()
+  {
+      global $wpdb;
+      $folderTableName = 'wp_folders';
+      $id = $_POST['id'];
+      $wpdb->get_results ( "DELETE FROM $folderTableName WHERE `id` = $id");
+  }
+
+  public function getCredentialLists()
     {
         global $wpdb;
         $credentialTableName = 'wp_credentials';

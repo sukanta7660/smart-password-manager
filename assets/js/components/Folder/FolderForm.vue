@@ -1,27 +1,27 @@
 <template>
     <el-dialog
-            v-model="modal.show"
-            @close="resetModal"
-            :title="props.isUpdating ? 'Folder Updating' : 'Folder Creating'">
-
-        <el-form :model="form">
+        :close-on-click-modal="false"
+        v-model="modal.show"
+        @close="resetModal"
+        :title="props.isUpdating ? 'Folder Updating' : 'Folder Creating'"
+    >
+        <el-form :model="form" @submit.prevent="handleSubmit">
             <el-form-item label="Name">
                 <el-input
                     v-model="form.name"
                     autocomplete="off"
                 />
             </el-form-item>
+
+            <div class="dialog-footer-btns">
+                <span class="dialog-footer">
+                  <el-button @click="resetModal">Cancel</el-button>
+                  <el-button type="primary" native-type="submit">
+                    {{ props.isUpdating ? 'Save Changes' : 'Save Folder' }}
+                  </el-button>
+                </span>
+            </div>
         </el-form>
-
-        <template #footer>
-          <span class="dialog-footer">
-            <el-button @click="resetModal">Cancel</el-button>
-            <el-button type="primary">
-              {{ props.isUpdating ? 'Save Changes' : 'Save Folder' }}
-            </el-button>
-          </span>
-        </template>
-
     </el-dialog>
 </template>
 
@@ -45,7 +45,6 @@ const props =  defineProps({
         type: Function,
         default: () => {}
     }
-
 })
 
 const form = reactive({
@@ -63,6 +62,36 @@ const resetModal = () => {
 
     form.name = '';
 }
+
+const handleSubmit = () => {
+    if (!props.isUpdating) {
+        createFolder();
+    } else {
+        console.log('Updating');
+    }
+};
+
+const createFolder = () => {
+    const dataToSubmit = {
+        action: 'create_folder',
+        name: form.name
+    }
+
+    const ajaxUrl = window.ajax_object.ajax_url;
+
+    window.jQuery.ajax({
+        url: ajaxUrl,
+        data: dataToSubmit,
+        method: 'POST'
+    }).done((response) => {
+        if (response) {
+            resetModal();
+        }
+
+        console.log(response);
+
+    });
+};
 
 watch(() => props.modalShow, (nv) => {
     modal.show = nv

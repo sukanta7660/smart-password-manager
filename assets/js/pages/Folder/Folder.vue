@@ -11,25 +11,25 @@
       <el-row :gutter="20" class="mt-4" style="width: 100%">
           <el-col :span="24">
               <el-card>
-              <el-table :data="state.tableData">
-                  <el-table-column prop="created_at" label="Date" />
-                  <el-table-column prop="folder" label="Name" />
-                  <el-table-column label="Action" >
-                      <template #default="scope">
-                          <el-button
-                              type="primary"
-                              @click="handleAction('edit', scope.row)"
-                          >
-                              Edit
-                          </el-button>
-                          <el-button
-                              @click="handleAction('delete', scope.row)"
-                              type="danger">
-                              Delete
-                          </el-button>
-                      </template>
-                  </el-table-column>
-              </el-table>
+                  <el-table :data="state.tableData">
+                      <el-table-column prop="created_at" label="Date" />
+                      <el-table-column prop="folder" label="Name" />
+                      <el-table-column label="Action" >
+                          <template #default="scope">
+                              <el-button
+                                  type="primary"
+                                  @click="handleAction('edit', scope.row)"
+                              >
+                                  Edit
+                              </el-button>
+                              <el-button
+                                  @click="handleAction('delete', scope.row)"
+                                  type="danger">
+                                  Delete
+                              </el-button>
+                          </template>
+                      </el-table-column>
+                  </el-table>
               </el-card>
           </el-col>
       </el-row>
@@ -46,7 +46,7 @@
 <script setup>
 import {onMounted, reactive} from 'vue';
 import Breadcrumb from "../../components/Utils/BreadCrumb.vue";
-import {formatDateTime} from '../../utils/helpers';
+import {confirmDelete, formatDateTime} from '../../utils/helpers';
 import FolderForm from '../../components/Folder/FolderForm.vue';
 
     const state = reactive({
@@ -60,7 +60,7 @@ import FolderForm from '../../components/Folder/FolderForm.vue';
     const fetchFolders = () => {
 
         const dataToSubmit = {
-            action: 'get_folder',
+            action: 'get_folder'
         }
 
         const ajaxUrl = window.ajax_object.ajax_url;
@@ -75,6 +75,23 @@ import FolderForm from '../../components/Folder/FolderForm.vue';
         });
 
    }
+
+   const deleteFolder = (id) => {
+       const dataToSubmit = {
+           action: 'delete_folder',
+           id
+       }
+
+       const ajaxUrl = window.ajax_object.ajax_url;
+
+       window.jQuery.ajax({
+           url: ajaxUrl,
+           data: dataToSubmit,
+           method: 'POST'
+       }).done((response) => {
+           fetchFolders();
+       });
+   };
 
    const formatFolderTableData = (data = []) => {
         if (!data.length) {
@@ -114,11 +131,9 @@ import FolderForm from '../../components/Folder/FolderForm.vue';
        }
 
        if (action === 'delete') {
-           console.log(action);
+           confirmDelete({ onConfirm: () => deleteFolder(data.id) });
        }
    };
-
-   // const modalCreate
 
     const getData = () => {
         fetchFolders();
