@@ -39,6 +39,7 @@ class SmartPasswordManager {
       $this->plugin = plugin_basename(__FILE__);
       add_action( 'wp_ajax_get_folder', [$this, 'getFolderLists']);
       add_action( 'wp_ajax_create_folder', [$this, 'createFolder']);
+      add_action( 'wp_ajax_update_folder', [$this, 'updateFolder']);
       add_action( 'wp_ajax_delete_folder', [$this, 'deleteFolder']);
       add_action( 'wp_ajax_get_credential', [$this, 'getCredentialLists']);
   }
@@ -65,6 +66,20 @@ class SmartPasswordManager {
            'created_at' => date('Y-m-d H:i:s'),
            'updated_at' => date('Y-m-d H:i:s'),
         ]);
+    }
+
+    public function updateFolder()
+    {
+        global $wpdb;
+        $folderTableName = 'wp_folders';
+        $name = $_POST['name'];
+
+        $wpdb->update($folderTableName, [
+            'name'       => $name,
+            'updated_at' => date('Y-m-d H:i:s'),
+        ],
+            ['id' => $_POST['id']]
+        );
     }
 
   public function deleteFolder()

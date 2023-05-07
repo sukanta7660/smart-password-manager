@@ -48,6 +48,7 @@ const props =  defineProps({
 })
 
 const form = reactive({
+    id: null,
     name: ''
 });
 
@@ -60,6 +61,7 @@ const modal = {
 const resetModal = () => {
     props.closeModalHandler();
 
+    form.id = null;
     form.name = '';
 }
 
@@ -67,7 +69,7 @@ const handleSubmit = () => {
     if (!props.isUpdating) {
         createFolder();
     } else {
-        console.log('Updating');
+        updateFolder();
     }
 };
 
@@ -88,7 +90,27 @@ const createFolder = () => {
             resetModal();
         }
 
-        console.log(response);
+    });
+};
+
+
+const updateFolder = () => {
+    const dataToSubmit = {
+        action: 'update_folder',
+        id: form.id,
+        name: form.name
+    }
+
+    const ajaxUrl = window.ajax_object.ajax_url;
+
+    window.jQuery.ajax({
+        url: ajaxUrl,
+        data: dataToSubmit,
+        method: 'POST'
+    }).done((response) => {
+        if (response) {
+            resetModal();
+        }
 
     });
 };
@@ -102,7 +124,8 @@ watch(() => props.folder, (nv) => {
         return;
     }
 
-    form.name = nv.folder
+    form.id = nv.id;
+    form.name = nv.folder;
 });
 
 </script>

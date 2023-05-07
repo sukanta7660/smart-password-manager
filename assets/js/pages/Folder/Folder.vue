@@ -112,6 +112,7 @@ import FolderForm from '../../components/Folder/FolderForm.vue';
    const closeModalHandler = () => {
        state.showCreateUpdate = false;
        state.isUpdating = false;
+       fetchFolders();
        state.selectedField = {};
    };
 
@@ -119,7 +120,6 @@ import FolderForm from '../../components/Folder/FolderForm.vue';
        state.showCreateUpdate = !state.showCreateUpdate;
        state.isUpdating = false;
        state.selectedField = {};
-
    };
 
    const handleAction = (action, data) => {
