@@ -2,11 +2,16 @@
     <div class="password-generate">
         <Breadcrumb current-page="Password Generator"/>
 
-        <el-row class="mt-4">
-            <el-button
-                type="primary">
-                Add New
-            </el-button>
+        <el-row :gutter="20" class="mt-4" style="width: 100%">
+            <el-col :span="24">
+                <el-card shadow="always">
+                    <el-row :gutter="20">
+                        <el-col :span="24" class="aligncenter">
+                            {{ state.passwordType === 'password' ? state.generatedPassword : state.generatedPassPhrase }}
+                        </el-col>
+                    </el-row>
+                </el-card>
+            </el-col>
         </el-row>
 
         <el-row :gutter="20" class="mt-4" style="width: 100%">
@@ -145,6 +150,11 @@
                                 </el-row>
                             </el-col>
                         </el-collapse-transition>
+
+                        <el-col :span="24">
+                            <el-button @click="handleGenerate">Generate Password</el-button>
+                            <el-button>Copy Password</el-button>
+                        </el-col>
                     </el-row>
                 </el-card>
             </el-col>
@@ -153,8 +163,9 @@
 </template>
 
 <script setup>
+import {onMounted, reactive} from 'vue';
 import Breadcrumb from '../../components/Utils/BreadCrumb.vue';
-import {reactive} from 'vue';
+import {CHARACTER_SET, POSSIBLE_CHARACTER_SET, WORD_LIST} from '../../utils/constants';
 
 const state = reactive({
     generationType: 'password',
@@ -178,6 +189,9 @@ const state = reactive({
         capitalize: false,
         isIncludeNumber: false
     },
+
+    generatedPassword: null,
+    generatedPassphrase: null,
 });
 
 const passwordOptions = {
@@ -198,6 +212,99 @@ const passwordOptions = {
         value: true,
     },
 };
+
+const generatePassword = () => {
+    let generatedPassword = '';
+    let numberOfSpecialChar = 0;
+    let numberOfNumericChar = 0;
+    let options = state.passwordGenerator.options;
+    while (generatedPassword.length < state.passwordGenerator.length) {
+        let randomIndex = Math.floor(Math.random() * POSSIBLE_CHARACTER_SET.length);
+        let characters = POSSIBLE_CHARACTER_SET.charAt(randomIndex);
+
+        if (options.numbers) {
+            characters = Math.random() > 0.5 ? characters + Math.floor(Math.random() * 10) : characters;
+            if (!isNaN(parseInt(characters))) {
+                numberOfNumericChar++;
+            }
+        }
+
+        if (options.uppercase) {
+            characters = Math.random() > 0.5 ? characters.toUpperCase() : characters;
+        }
+
+        if (options.special) {
+            if (options.special && CHARACTER_SET.symbol.indexOf(characters) !== -1) {
+                numberOfSpecialChar++;
+            }
+        }
+
+        if (!options.ambiguous) {
+            characters = "{}[]()/\"'`<>,;:.?\\|"
+        }
+
+        if (options.special && numberOfSpecialChar < state.passwordGenerator.minimumSpecialCharacter) {
+            let diff = state.passwordGenerator.minimumSpecialCharacter - numberOfSpecialChar;
+            for (let i = 0; i < diff; i++) {
+                let randomSpecialCharIndex = Math.floor(Math.random() * CHARACTER_SET.symbol.length);
+                generatedPassword = generatedPassword
+                    .slice(0, randomSpecialCharIndex) + CHARACTER_SET.symbol
+                    .charAt(randomSpecialCharIndex) + generatedPassword
+                    .slice(randomSpecialCharIndex);
+            }
+        }
+
+        if (options.numbers && numberOfNumericChar < state.passwordGenerator.minimumNumber) {
+            let diff = state.passwordGenerator.minimumNumber - numberOfNumericChar;
+            for (let i = 0; i < diff; i++) {
+                let randomNumberIndex = Math.floor(Math.random() * (generatedPassword.length - 1));
+                let randomNumber = Math.floor(Math.random() * 10);
+                generatedPassword = generatedPassword
+                    .slice(0, randomNumberIndex) + randomNumber + generatedPassword
+                    .slice(randomNumberIndex);
+            }
+        }
+        generatedPassword += characters;
+    }
+    state.generatedPassword = generatedPassword;
+
+    console.log(state.generatedPassword);
+
+};
+
+const generatePassphrase = () => {
+    let generatedPassword = '';
+    let options = state.passPhraseGenerator;
+    for (let i = 0; i < options.numberOfWords; i++) {
+        let word = options.capitalize
+            ? WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)].charAt(0).toUpperCase() + WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)].slice(1) :
+            WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)].charAt(0).toLowerCase() + WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)].slice(1);
+        generatedPassword += word;
+        if (i < options.numberOfWords - 1) {
+            generatedPassword += options.wordSeparator;
+        }
+    }
+    if (options.isIncludeNumber) {
+        const splitPhrase = generatedPassword.split(options.wordSeparator);
+        const randomIndex = Math.floor(Math.random() * splitPhrase.length);
+        const randomNum = Math.floor(Math.random() * 10);
+        splitPhrase[randomIndex] = splitPhrase[randomIndex] + randomNum;
+        generatedPassword = splitPhrase.join(options.wordSeparator);
+    }
+    state.generatedPassPhrase = generatedPassword;
+
+    console.log(state.generatedPassPhrase);
+};
+
+
+const handleGenerate = () => {
+    state.passwordType === 'password' ? generatePassword() : generatePassphrase();
+};
+
+onMounted(() => {
+    generatePassword();
+    generatePassphrase();
+})
 </script>
 
 <style scoped lang="scss">
