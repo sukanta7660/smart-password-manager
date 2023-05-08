@@ -7,7 +7,9 @@
                 <el-card shadow="always">
                     <el-row :gutter="20">
                         <el-col :span="24" class="aligncenter">
-                            {{ state.passwordType === 'password' ? state.generatedPassword : state.generatedPassPhrase }}
+                            <el-button text @click="copyToClipboard">
+                                {{ state.passwordType === 'password' ? state.generatedPassword : state.generatedPassPhrase }}
+                            </el-button>
                         </el-col>
                     </el-row>
                 </el-card>
@@ -153,7 +155,7 @@
 
                         <el-col :span="24">
                             <el-button @click="handleGenerate">Generate Password</el-button>
-                            <el-button>Copy Password</el-button>
+                            <el-button @click="copyToClipboard">Copy Password</el-button>
                         </el-col>
                     </el-row>
                 </el-card>
@@ -163,7 +165,7 @@
 </template>
 
 <script setup>
-import {onMounted, reactive} from 'vue';
+import {onMounted, reactive, watch} from 'vue';
 import Breadcrumb from '../../components/Utils/BreadCrumb.vue';
 import {CHARACTER_SET, POSSIBLE_CHARACTER_SET, WORD_LIST} from '../../utils/constants';
 
@@ -268,8 +270,6 @@ const generatePassword = () => {
     }
     state.generatedPassword = generatedPassword;
 
-    console.log(state.generatedPassword);
-
 };
 
 const generatePassphrase = () => {
@@ -292,14 +292,29 @@ const generatePassphrase = () => {
         generatedPassword = splitPhrase.join(options.wordSeparator);
     }
     state.generatedPassPhrase = generatedPassword;
-
-    console.log(state.generatedPassPhrase);
 };
 
 
 const handleGenerate = () => {
     state.passwordType === 'password' ? generatePassword() : generatePassphrase();
 };
+
+const copyToClipboard = () => {
+    let text = state.passwordType === 'password' ? state.generatedPassword : state.generatedPassPhrase;
+    document.execCommand('copy', text);
+};
+
+watch(state.passwordGenerator, () => {
+    if (state.passwordType === 'password') {
+        generatePassword();
+    }
+});
+
+watch(state.passPhraseGenerator, () => {
+    if (state.passwordType === 'passphrase') {
+        generatePassphrase();
+    }
+});
 
 onMounted(() => {
     generatePassword();
