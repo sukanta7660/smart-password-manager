@@ -8,6 +8,24 @@
                 type="primary">
                 Add New
             </el-button>
+
+            <el-button
+                @click="handleCreateCredential"
+                type="primary">
+                Export as CSV
+            </el-button>
+
+            <el-button
+                @click="handleCreateCredential"
+                type="primary">
+                Import CSV File
+            </el-button>
+
+            <el-button
+                @click="handleCreateCredential"
+                type="primary">
+                Move selected item
+            </el-button>
         </el-row>
 
         <el-row :gutter="20" class="mt-4" style="width: 100%">
@@ -34,6 +52,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
+                    <el-pagination layout="prev, pager, next" :total="state.tableData.length" />
                 </el-card>
             </el-col>
         </el-row>
