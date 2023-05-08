@@ -104,6 +104,7 @@ const formatCredentialTableData = (data = []) => {
 const closeModalHandler = () => {
     state.showCreateUpdate = false;
     state.isUpdating = false;
+    fetchCredentials();
     state.selectedField = {};
 };
 

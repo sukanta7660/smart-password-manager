@@ -7,59 +7,88 @@
     >
 
         <el-form
-            label-width="100px"
+            ref="credentialForm"
             :model="form"
+            :rules="rules"
+            label-width="100px"
+            @submit.prevent="handleSubmit"
         >
-            <el-form-item label="Name">
-                <el-input
-                    v-model="form.name"
-                    autocomplete="off"
-                />
-            </el-form-item>
+            <el-row :gutter="20" style="width: 100%">
+                <el-col :span="12">
+                    <el-form-item
+                        label="Name"
+                        required
+                        prop="name">
+                        <el-input
+                            v-model.trim="form.name"
+                            autocomplete="off"
+                        />
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item
+                        label="Type"
+                        required
+                        prop="item_type"
+                    >
+                        <el-select
+                            v-model.trim="form.item_type"
+                            clearable
+                            placeholder="Select Type">
+                            <el-option
+                                v-for="item in credentialTypes"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                            />
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
 
             <el-form-item label="Username">
                 <el-input
-                    v-model="form.username"
+                    v-model.trim="form.username"
                     autocomplete="off"
                 />
             </el-form-item>
 
             <el-form-item label="Password">
                 <el-input
-                    v-model="form.password"
+                    v-model.trim="form.password"
                     autocomplete="off"
                 />
             </el-form-item>
 
             <el-form-item label="Url">
                 <el-input
-                    v-model="form.url"
+                    v-model.trim="form.url"
                     autocomplete="off"
                 />
             </el-form-item>
 
             <el-form-item label="Notes">
                 <el-input
-                    v-model="form.notes"
+                    v-model.trim="form.notes"
                     autocomplete="off"
                 />
             </el-form-item>
-        </el-form>
 
-        <template #footer>
-          <span class="dialog-footer">
-            <el-button @click="resetModal">Cancel</el-button>
-            <el-button type="primary">
-              {{ props.isUpdating ? 'Save Changes' : 'Save Credential' }}
-            </el-button>
-          </span>
-        </template>
+            <div class="dialog-footer-btns">
+                <span class="dialog-footer">
+                  <el-button @click="resetModal">Cancel</el-button>
+                  <el-button type="primary" native-type="submit">
+                    {{ props.isUpdating ? 'Save Changes' : 'Save Credential' }}
+                  </el-button>
+                </span>
+            </div>
+        </el-form>
 
     </el-dialog>
 </template>
 
 <script setup>
-import {reactive, watch} from 'vue';
+import {reactive, watch, ref} from 'vue';
 
 const props =  defineProps({
     credential: {
@@ -79,17 +108,56 @@ const props =  defineProps({
         default: () => {}
     }
 
-})
+});
+
+const credentialForm = ref();
 
 const form = reactive({
-    name: '',
-    username: '',
-    password: '',
-    url: '',
-    notes: '',
-    item_type: '',
-    folder_id: null,
+    id: null,
+    name: null,
+    username: null,
+    password: null,
+    url: null,
+    notes: null,
+    item_type: null
 });
+
+const rules = reactive({
+    name: [
+        {
+            required: true,
+            message: 'Please input name',
+            trigger: 'blur'
+        },
+        {
+            min: 3,
+            message: 'Length should be 3 to 5',
+            trigger: 'blur'
+        },
+    ],
+    item_type: [
+        {
+            required: true,
+            message: 'Please select a type',
+            trigger: 'blur'
+        }
+    ]
+})
+
+const credentialTypes = [
+    {
+        value: 'login',
+        label: 'Login'
+    },
+    {
+        value: 'card',
+        label: 'Card'
+    },
+    {
+        value: 'identity',
+        label: 'Identity'
+    }
+];
 
 const modal = {
     title: props.isUpdating ? 'Updating Credential' : 'Creating Credential',
@@ -97,11 +165,64 @@ const modal = {
     show: false
 };
 
+const createCredential = () => {
+    const dataToSubmit = {
+        action: 'create_credential',
+        ...form
+    }
+
+    const ajaxUrl = window.ajax_object.ajax_url;
+
+    window.jQuery.ajax({
+        url: ajaxUrl,
+        data: dataToSubmit,
+        method: 'POST'
+    }).done((response) => {
+        if (response) {
+            resetModal();
+        }
+
+    });
+};
+
+const updateCredential = () => {
+    const dataToSubmit = {
+        action: 'update_credential',
+        ...form
+    }
+
+    const ajaxUrl = window.ajax_object.ajax_url;
+
+    window.jQuery.ajax({
+        url: ajaxUrl,
+        data: dataToSubmit,
+        method: 'POST'
+    }).done((response) => {
+        if (response) {
+            resetModal();
+        }
+
+    });
+};
+
+const handleSubmit = () => {
+    credentialForm.value.validate((valid, fields) => {
+        if (valid) {
+            !props.isUpdating ? createCredential() : updateCredential()
+        }
+    })
+};
+
 const resetModal = () => {
     props.closeModalHandler();
-
-    form.name = '';
-}
+    form.id =  null;
+    form.name = null;
+    form.username = null;
+    form.password = null;
+    form.url = null;
+    form.notes = null;
+    form.item_type = null;
+};
 
 watch(() => props.modalShow, (nv) => {
     modal.show = nv
@@ -119,6 +240,7 @@ const populateCredentialData = (item = {}) => {
     if (!item) {
         return;
     }
+    form.id = item.id;
     form.name = item.name;
     form.username = item.username;
     form.password = item.password;

@@ -66,11 +66,7 @@ const resetModal = () => {
 }
 
 const handleSubmit = () => {
-    if (!props.isUpdating) {
-        createFolder();
-    } else {
-        updateFolder();
-    }
+    !props.isUpdating ? createFolder() : updateFolder();
 };
 
 const createFolder = () => {
