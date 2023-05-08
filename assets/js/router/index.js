@@ -3,6 +3,7 @@ import {createRouter, createWebHashHistory} from 'vue-router';
 import FolderMain from '../pages/Folder/Folder.vue';
 import CredentialMain from '../pages/Credential/Credential.vue';
 import Dashboard from '../pages/Dashboard.vue';
+import PasswordGenerator from '../pages/Password/PasswordGenerator.vue';
 
 const routes = [
     {
@@ -23,6 +24,12 @@ const routes = [
         publicPath: '/',
         name: 'CredentialMain',
         component: CredentialMain
+    },
+    {
+        path: '/password',
+        publicPath: '/',
+        name: 'PasswordGenerator',
+        component: PasswordGenerator
     }
 ];
 

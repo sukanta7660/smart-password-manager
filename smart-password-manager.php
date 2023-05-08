@@ -117,10 +117,10 @@ class SmartPasswordManager {
             'user_id'    => $user->ID,
             'item_type'  => $_POST['item_type'],
             'name'       => $_POST['name'],
-            'username'   => $_POST['username'] ?? null,
-            'password'   => $_POST['password'] ?? null,
-            'url'        => $_POST['url'] ?? null,
-            'notes'      => $_POST['notes'] ?? null,
+            'username'   => $_POST['username'] ?: null,
+            'password'   => $_POST['password'] ?: null,
+            'url'        => $_POST['url'] ?: null,
+            'notes'      => $_POST['notes'] ?: null,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
@@ -134,10 +134,10 @@ class SmartPasswordManager {
         $wpdb->update($credentialTableName, [
             'item_type'  => $_POST['item_type'],
             'name'       => $_POST['name'],
-            'username'   => $_POST['username'] ?? null,
-            'password'   => $_POST['password'] ?? null,
-            'url'        => $_POST['url'] ?? null,
-            'notes'      => $_POST['notes'] ?? null,
+            'username'   => $_POST['username'] ?: null,
+            'password'   => $_POST['password'] ?: null,
+            'url'        => $_POST['url'] ?: null,
+            'notes'      => $_POST['notes'] ?: null,
             'updated_at' => date('Y-m-d H:i:s'),
         ],
             ['id' => $_POST['id']]
@@ -190,6 +190,15 @@ class SmartPasswordManager {
           'Credential',
           'manage_options',
           'smart_password_manager#/credentials',
+          array( $this, 'plugin_index' ),
+      );
+
+      add_submenu_page(
+          'smart_password_manager',
+          'Password Generator',
+          'Password',
+          'manage_options',
+          'smart_password_manager#/password',
           array( $this, 'plugin_index' ),
       );
 
