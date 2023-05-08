@@ -201,7 +201,6 @@ const updateCredential = () => {
         if (response) {
             resetModal();
         }
-
     });
 };
 

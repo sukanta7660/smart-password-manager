@@ -49,8 +49,8 @@
 
 <script setup>
 import {onMounted, reactive} from 'vue';
-import Breadcrumb from "../../components/Utils/BreadCrumb.vue";
-import {formatDateTime} from '../../utils/helpers';
+import Breadcrumb from '../../components/Utils/BreadCrumb.vue';
+import {confirmDelete, formatDateTime} from '../../utils/helpers';
 import CredentialForm from '../../components/Credential/CredentialForm.vue';
 
 const state = reactive({
@@ -112,7 +112,23 @@ const handleCreateCredential = () => {
     state.showCreateUpdate = !state.showCreateUpdate;
     state.isUpdating = false;
     state.selectedField = {};
+};
 
+const deleteCredential = (id) => {
+    const dataToSubmit = {
+        action: 'delete_credential',
+        id
+    }
+
+    const ajaxUrl = window.ajax_object.ajax_url;
+
+    window.jQuery.ajax({
+        url: ajaxUrl,
+        data: dataToSubmit,
+        method: 'POST'
+    }).done((response) => {
+        fetchCredentials();
+    });
 };
 
 const handleAction = (action, data) => {
@@ -124,7 +140,7 @@ const handleAction = (action, data) => {
     }
 
     if (action === 'delete') {
-        console.log(action);
+        confirmDelete({ onConfirm: () => deleteCredential(data.id) });
     }
 };
 
