@@ -168,6 +168,9 @@
 import {onMounted, reactive, watch} from 'vue';
 import Breadcrumb from '../../components/Utils/BreadCrumb.vue';
 import {CHARACTER_SET, POSSIBLE_CHARACTER_SET, WORD_LIST} from '../../utils/constants';
+import { ElNotification } from 'element-plus'
+import { copyText } from 'vue3-clipboard';
+import { notify } from '../../utils/helpers';
 
 const state = reactive({
     generationType: 'password',
@@ -300,8 +303,14 @@ const handleGenerate = () => {
 };
 
 const copyToClipboard = () => {
-    let text = state.passwordType === 'password' ? state.generatedPassword : state.generatedPassPhrase;
-    document.execCommand('copy', text);
+    let textToCopy = state.passwordType === 'password' ? state.generatedPassword : state.generatedPassPhrase;
+    copyText(textToCopy, undefined, (error, event) => {
+        if (error) {
+            notify('error', 'Can not copy')
+        } else {
+            notify('success', 'Password copied');
+        }
+    })
 };
 
 watch(state.passwordGenerator, () => {

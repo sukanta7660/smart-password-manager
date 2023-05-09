@@ -27,6 +27,7 @@
 
 <script setup>
 import {reactive, watch} from 'vue';
+import {notify} from '../../utils/helpers';
 
 const props =  defineProps({
     folder: {
@@ -87,6 +88,7 @@ const createFolder = () => {
         method: 'POST'
     }).done((response) => {
         if (response) {
+            notify('success', 'Folder Added');
             resetModal();
             props.onSuccessHandler();
         }
@@ -110,6 +112,7 @@ const updateFolder = () => {
         method: 'POST'
     }).done((response) => {
         if (response) {
+            notify('success', 'Folder Updated');
             resetModal();
             props.onSuccessHandler();
         }

@@ -85,9 +85,9 @@
 <script setup>
 import {onMounted, reactive} from 'vue';
 import Breadcrumb from '../../components/Utils/BreadCrumb.vue';
-import {confirmDelete, exportCsv, formatDateTime} from '../../utils/helpers';
+import {confirmDelete, exportCsv, formatDateTime, notify} from '../../utils/helpers';
 import CredentialForm from '../../components/Credential/CredentialForm.vue';
-import MasterPasswordForm from "./MasterPasswordForm.vue";
+import MasterPasswordForm from "../../components/Credential/MasterPasswordForm.vue";
 import {
     Plus, Download, UploadFilled, FolderRemove,
     Delete, Edit
@@ -194,6 +194,7 @@ const deleteCredential = (id) => {
         data: dataToSubmit,
         method: 'POST'
     }).done((response) => {
+        notify('success', 'Credential Deleted')
         fetchCredentials();
     });
 };

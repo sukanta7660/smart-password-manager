@@ -20,7 +20,7 @@
                         required
                         prop="name">
                         <el-input
-                            v-model.trim="form.name"
+                            v-model="form.name"
                             autocomplete="off"
                         />
                     </el-form-item>
@@ -32,7 +32,7 @@
                         prop="item_type"
                     >
                         <el-select
-                            v-model.trim="form.item_type"
+                            v-model="form.item_type"
                             clearable
                             placeholder="Select Type">
                             <el-option
@@ -50,7 +50,7 @@
                         label="Folder"
                     >
                         <el-select
-                            v-model.trim="form.folder_id"
+                            v-model="form.folder_id"
                             clearable
                             placeholder="Select Folder">
                             <el-option
@@ -73,7 +73,7 @@
 
             <el-form-item label="Password">
                 <el-input
-                    v-model.trim="form.password"
+                    v-model="form.password"
                     autocomplete="off"
                 />
             </el-form-item>
@@ -87,7 +87,7 @@
 
             <el-form-item label="Notes">
                 <el-input
-                    v-model.trim="form.notes"
+                    v-mode="form.notes"
                     autocomplete="off"
                 />
             </el-form-item>
@@ -107,6 +107,7 @@
 
 <script setup>
 import {reactive, watch, ref} from 'vue';
+import {notify} from '../../utils/helpers';
 
 const props =  defineProps({
     credential: {
@@ -205,6 +206,7 @@ const createCredential = () => {
         method: 'POST'
     }).done((response) => {
         if (response) {
+            notify('success', 'Credential Added')
             resetModal();
             props.onSuccessHandler();
         }
@@ -226,6 +228,7 @@ const updateCredential = () => {
         method: 'POST'
     }).done((response) => {
         if (response) {
+            notify('success', 'Credential Updated')
             resetModal();
             props.onSuccessHandler();
         }

@@ -114,7 +114,6 @@ const handleSubmit = () => {
             });
         }
     })
-    console.log({password: 'checked'});
 };
 
 const resetModal = () => {

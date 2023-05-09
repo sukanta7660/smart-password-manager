@@ -47,7 +47,7 @@
 <script setup>
 import {onMounted, reactive} from 'vue';
 import Breadcrumb from "../../components/Utils/BreadCrumb.vue";
-import {confirmDelete, formatDateTime} from '../../utils/helpers';
+import {confirmDelete, formatDateTime, notify} from '../../utils/helpers';
 import FolderForm from '../../components/Folder/FolderForm.vue';
 
     const state = reactive({
@@ -90,6 +90,7 @@ import FolderForm from '../../components/Folder/FolderForm.vue';
            data: dataToSubmit,
            method: 'POST'
        }).done((response) => {
+           notify('success', 'Folder Deleted')
            fetchFolders();
        });
    };

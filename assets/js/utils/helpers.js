@@ -1,5 +1,6 @@
 import Swal from 'sweetalert2';
 import dayjs from 'dayjs';
+import {ElNotification} from "element-plus";
 
 /**
  *
@@ -103,6 +104,16 @@ export const confirmDelete = (config = {}) => {
             }
         )
         ;
+};
+
+export const notify = (alertType = null, message = null, config = {}) => {
+    return ElNotification({
+        type: alertType,
+        title: message,
+        duration: 2000,
+        showClose: true,
+        ...config
+    })
 };
 
 export const exportCsv = (data, fName = null) => {
