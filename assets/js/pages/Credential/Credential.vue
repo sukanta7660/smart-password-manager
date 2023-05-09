@@ -74,7 +74,8 @@
         <!--Master Password Form-->
         <MasterPasswordForm
             :modal-show="state.showMasterPasswordForm"
-            :close-modal-handler="closeModalHandler"
+            :close-modal-handler="closeMasterPasswordModalHandler"
+            :on-success-handler="handleUpdateHandler"
         />
 
     </div>
@@ -167,10 +168,17 @@ const closeModalHandler = () => {
     state.selectedField = {};
 };
 
+const closeMasterPasswordModalHandler = () => {
+    state.showMasterPasswordForm = false;
+};
+
 const handleCreateCredential = () => {
     state.showCreateUpdate = !state.showCreateUpdate;
-    state.isUpdating = false;
-    state.selectedField = {};
+};
+
+const handleUpdateHandler = () => {
+    state.isUpdating = true;
+    state.showCreateUpdate = true;
 };
 
 const deleteCredential = (id) => {
@@ -195,8 +203,6 @@ const handleAction = (action, data) => {
 
     if (action === 'edit') {
         state.showMasterPasswordForm = true;
-        // state.isUpdating = true;
-        // state.showCreateUpdate = true;
     }
 
     if (action === 'delete') {
