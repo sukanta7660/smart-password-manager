@@ -62,6 +62,7 @@
             </el-col>
         </el-row>
 
+        <!--Credential Create Update Form-->
         <CredentialForm
             :folders="state.folders"
             :modal-show="state.showCreateUpdate"
@@ -69,6 +70,13 @@
             :is-updating="state.isUpdating"
             :close-modal-handler="closeModalHandler"
         />
+
+        <!--Master Password Form-->
+        <MasterPasswordForm
+            :modal-show="state.showMasterPasswordForm"
+            :close-modal-handler="closeModalHandler"
+        />
+
     </div>
 </template>
 
@@ -77,6 +85,7 @@ import {onMounted, reactive} from 'vue';
 import Breadcrumb from '../../components/Utils/BreadCrumb.vue';
 import {confirmDelete, exportCsv, formatDateTime} from '../../utils/helpers';
 import CredentialForm from '../../components/Credential/CredentialForm.vue';
+import MasterPasswordForm from "./MasterPasswordForm.vue";
 import {
     Plus, Download, UploadFilled, FolderRemove,
     Delete, Edit
@@ -87,6 +96,7 @@ const state = reactive({
     folders: [],
     tableData: [],
     showCreateUpdate: false,
+    showMasterPasswordForm: false,
     isUpdating: false,
     selectedField: {}
 });
@@ -184,8 +194,9 @@ const handleAction = (action, data) => {
     state.selectedField = data;
 
     if (action === 'edit') {
-        state.isUpdating = true;
-        state.showCreateUpdate = true;
+        state.showMasterPasswordForm = true;
+        // state.isUpdating = true;
+        // state.showCreateUpdate = true;
     }
 
     if (action === 'delete') {
