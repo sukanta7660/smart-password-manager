@@ -38,6 +38,7 @@
           :modal-show="state.showCreateUpdate"
           :folder="state.selectedField"
           :is-updating="state.isUpdating"
+          :on-success-handler="fetchFolders"
           :close-modal-handler="closeModalHandler"
       />
   </div>
@@ -112,7 +113,6 @@ import FolderForm from '../../components/Folder/FolderForm.vue';
    const closeModalHandler = () => {
        state.showCreateUpdate = false;
        state.isUpdating = false;
-       fetchFolders();
        state.selectedField = {};
    };
 

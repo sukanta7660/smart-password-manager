@@ -69,6 +69,7 @@
             :credential="state.selectedField"
             :is-updating="state.isUpdating"
             :close-modal-handler="closeModalHandler"
+            :on-success-handler="fetchCredentials"
         />
 
         <!--Master Password Form-->
@@ -164,7 +165,6 @@ const formatCredentialTableData = (data = []) => {
 const closeModalHandler = () => {
     state.showCreateUpdate = false;
     state.isUpdating = false;
-    fetchCredentials();
     state.selectedField = {};
 };
 
@@ -233,7 +233,6 @@ const handleExportCsv = () => {
     let fileName = String('credentials-'+new Date().toLocaleString());
 
     exportCsv(data, fileName);
-    // state.selectedItems = [];
 
 };
 

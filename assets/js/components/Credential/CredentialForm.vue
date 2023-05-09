@@ -128,8 +128,11 @@ const props =  defineProps({
     closeModalHandler: {
         type: Function,
         default: () => {}
+    },
+    onSuccessHandler: {
+        type: Function,
+        default: () => {}
     }
-
 });
 
 const credentialForm = ref();
@@ -203,6 +206,7 @@ const createCredential = () => {
     }).done((response) => {
         if (response) {
             resetModal();
+            props.onSuccessHandler();
         }
 
     });
@@ -223,6 +227,7 @@ const updateCredential = () => {
     }).done((response) => {
         if (response) {
             resetModal();
+            props.onSuccessHandler();
         }
     });
 };

@@ -1,7 +1,6 @@
 <template>
     <el-dialog
             :close-on-click-modal="false"
-            @close-auto-focus="onSuccessHandler"
             v-model="modal.show"
             @close="resetModal"
             title="Master Password Check"
@@ -108,6 +107,7 @@ const handleSubmit = () => {
             }).done((response) => {
                 if (response) {
                     resetModal();
+                    props.onSuccessHandler();
                 }else {
                     form.error = 'Password is incorrect';
                 }

@@ -44,6 +44,10 @@ const props =  defineProps({
     closeModalHandler: {
         type: Function,
         default: () => {}
+    },
+    onSuccessHandler: {
+        type: Function,
+        default: () => {}
     }
 })
 
@@ -84,6 +88,7 @@ const createFolder = () => {
     }).done((response) => {
         if (response) {
             resetModal();
+            props.onSuccessHandler();
         }
 
     });
@@ -106,6 +111,7 @@ const updateFolder = () => {
     }).done((response) => {
         if (response) {
             resetModal();
+            props.onSuccessHandler();
         }
 
     });
