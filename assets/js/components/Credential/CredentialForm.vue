@@ -14,7 +14,7 @@
             @submit.prevent="handleSubmit"
         >
             <el-row :gutter="20" style="width: 100%">
-                <el-col :span="12">
+                <el-col :span="24">
                     <el-form-item
                         label="Name"
                         required
@@ -40,6 +40,24 @@
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
+                            />
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="12">
+                    <el-form-item
+                        label="Folder"
+                    >
+                        <el-select
+                            v-model.trim="form.folder_id"
+                            clearable
+                            placeholder="Select Folder">
+                            <el-option
+                                v-for="item in props.folders"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id"
                             />
                         </el-select>
                     </el-form-item>
@@ -95,6 +113,10 @@ const props =  defineProps({
         type: Object,
         default: () => {}
     },
+    folders: {
+      type: Array,
+      default: () => []
+    },
     modalShow: {
         type: Boolean,
         default: false
@@ -114,6 +136,7 @@ const credentialForm = ref();
 
 const form = reactive({
     id: null,
+    folder_id: null,
     name: null,
     username: null,
     password: null,
@@ -215,6 +238,7 @@ const handleSubmit = () => {
 const resetModal = () => {
     props.closeModalHandler();
     form.id =  null;
+    form.folder_id = null;
     form.name = null;
     form.username = null;
     form.password = null;
@@ -240,6 +264,7 @@ const populateCredentialData = (item = {}) => {
         return;
     }
     form.id = item.id;
+    form.folder_id = item.folder_id;
     form.name = item.name;
     form.username = item.username;
     form.password = item.password;

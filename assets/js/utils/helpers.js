@@ -104,3 +104,41 @@ export const confirmDelete = (config = {}) => {
         )
         ;
 };
+
+export const exportCsv = (data, fName = null) => {
+
+    const fileName = !fName ? 'data.csv' : `${fName}.csv`;
+
+    const rows = [Object.keys(data[0]).join(",")].concat(
+        data.map(row =>
+            Object.values(row)
+                .map(val => `"${val}"`)
+                .join(",")
+        ));
+
+    let csvContent = rows.join("\n");
+
+    let blob = new Blob([csvContent], {
+        type: "text/csv;charset=utf-8;"
+    });
+
+    if (navigator.msSaveBlob) {
+
+        navigator.msSaveBlob(blob, fileName);
+
+    } else {
+
+        let link = document.createElement("a");
+
+        if (link.download !== undefined) {
+            let url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", fileName);
+            link.style.visibility = "hidden";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+    }
+};

@@ -116,6 +116,7 @@ class SmartPasswordManager {
         $wpdb->insert($credentialTableName, [
             'user_id'    => $user->ID,
             'item_type'  => $_POST['item_type'],
+            'folder_id'  => $_POST['folder_id'] ?? null,
             'name'       => $_POST['name'],
             'username'   => $_POST['username'] ?? null,
             'password'   => $_POST['password'] ?? null,
@@ -133,6 +134,7 @@ class SmartPasswordManager {
 
         $wpdb->update($credentialTableName, [
             'item_type'  => $_POST['item_type'],
+            'folder_id'  => $_POST['folder_id'] ?? null,
             'name'       => $_POST['name'],
             'username'   => $_POST['username'] ?? null,
             'password'   => $_POST['password'] ?? null,

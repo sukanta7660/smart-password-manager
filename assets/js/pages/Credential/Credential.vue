@@ -5,24 +5,28 @@
         <el-row class="mt-4">
             <el-button
                 @click="handleCreateCredential"
+                :icon="Plus"
                 type="primary">
                 Add New
             </el-button>
 
             <el-button
-                @click="handleCreateCredential"
+                :icon="Download"
+                @click="handleExportCsv"
                 type="primary">
                 Export as CSV
             </el-button>
 
             <el-button
                 @click="handleCreateCredential"
+                :icon="UploadFilled"
                 type="primary">
                 Import CSV File
             </el-button>
 
             <el-button
                 @click="handleCreateCredential"
+                :icon="FolderRemove"
                 type="primary">
                 Move selected item
             </el-button>
@@ -41,23 +45,25 @@
                                 <el-button
                                     type="primary"
                                     @click="handleAction('edit', scope.row)"
+                                    :icon="Edit"
                                 >
                                     Edit
                                 </el-button>
                                 <el-button
                                     @click="handleAction('delete', scope.row)"
+                                    :icon="Delete"
                                     type="danger">
                                     Delete
                                 </el-button>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-pagination layout="prev, pager, next" :total="state.tableData.length" />
                 </el-card>
             </el-col>
         </el-row>
 
         <CredentialForm
+            :folders="state.folders"
             :modal-show="state.showCreateUpdate"
             :credential="state.selectedField"
             :is-updating="state.isUpdating"
@@ -69,11 +75,16 @@
 <script setup>
 import {onMounted, reactive} from 'vue';
 import Breadcrumb from '../../components/Utils/BreadCrumb.vue';
-import {confirmDelete, formatDateTime} from '../../utils/helpers';
+import {confirmDelete, exportCsv, formatDateTime} from '../../utils/helpers';
 import CredentialForm from '../../components/Credential/CredentialForm.vue';
+import {
+    Plus, Download, UploadFilled, FolderRemove,
+    Delete, Edit
+} from '@element-plus/icons-vue'
 
 const state = reactive({
     credentials: [],
+    folders: [],
     tableData: [],
     showCreateUpdate: false,
     isUpdating: false,
@@ -97,7 +108,25 @@ const fetchCredentials = () => {
         formatCredentialTableData(response);
     });
 
-}
+};
+
+const fetchFolders = () => {
+
+    const dataToSubmit = {
+        action: 'get_folder',
+    }
+
+    const ajaxUrl = window.ajax_object.ajax_url;
+
+    window.jQuery.ajax({
+        url: ajaxUrl,
+        data: dataToSubmit,
+        method: 'POST'
+    }).done((response) => {
+        state.folders = response;
+    });
+
+};
 
 const formatCredentialTableData = (data = []) => {
     if (!data.length) {
@@ -107,6 +136,7 @@ const formatCredentialTableData = (data = []) => {
     state.tableData = data.map((credential) => {
         return {
             id: credential.id,
+            folder_id: credential.folder_id,
             name: credential.name,
             username: credential.username,
             password: credential.password,
@@ -163,8 +193,36 @@ const handleAction = (action, data) => {
     }
 };
 
+const handleExportCsv = () => {
+
+    if (!state.credentials.length) {
+        return;
+    }
+
+    const data = state.credentials.map(item => ({
+        id: item.id,
+        folder_id: item.folder_id,
+        user_id: item.user_id,
+        item_type: item.item_type,
+        name: item.name,
+        username: item.username,
+        password: item.password,
+        url: item.url,
+        notes: item.notes,
+        created_at: item.created_at,
+        updated_at: item.updated_at,
+    }))
+
+    let fileName = String('credentials-'+new Date().toLocaleString());
+
+    exportCsv(data, fileName);
+    // state.selectedItems = [];
+
+};
+
 const getData = () => {
     fetchCredentials();
+    fetchFolders();
 };
 
 onMounted(() => {
