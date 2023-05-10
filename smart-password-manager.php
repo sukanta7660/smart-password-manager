@@ -27,6 +27,8 @@ along with Smart Password Manager. If not, write to the free software.
 Copyright 2019 Smart Password Manager LLC. All rights reserved.
 */
 
+include 'lib/shortcodes.php';
+
 if (!defined('ABSPATH')) {
   exit;
 }
