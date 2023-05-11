@@ -5,15 +5,18 @@
             mode="horizontal"
             :router="true"
             :ellipsis="false"
-            @select="handleSelect"
     >
-        <el-menu-item index="/">
+        <el-menu-item
+            :class="currentRoutePath === '/' ? 'is-active' : ''"
+            index="/"
+        >
             Password Vault
         </el-menu-item>
         <div class="flex-grow" />
         <el-menu-item
-                v-for="route in routes"
-                :index="route.url"
+            v-for="route in routes"
+            :index="route.path "
+            :class="currentRoutePath === route.path ? 'is-active' : ''"
         >
             {{ route.name }}
         </el-menu-item>
@@ -21,13 +24,22 @@
 </template>
 
 <script setup>
-import {reactive, ref} from 'vue';
+import {computed, reactive, ref, onMounted} from 'vue';
 import {routes} from '../../utils/routeMap';
+import {useRoute, useRouter} from 'vue-router';
 const activeIndex = ref('1');
 
-const handleSelect = (key, keyPath) => {
-    console.log(key, keyPath)
-}
+const route = useRoute();
+const router = useRouter();
+
+const currentRoutePath = computed(() => {
+    return route.path;
+});
+
+onMounted(() => {
+    router.isReady();
+});
+
 </script>
 
 <style scoped lang="scss">

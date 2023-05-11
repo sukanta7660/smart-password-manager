@@ -1,10 +1,10 @@
 export const routes = [
     {
         name: 'Folder',
-        url: '/folders'
+        path: '/folders'
     },
     {
         name: 'Credentials',
-        url: '/credentials'
+        path: '/credentials'
     }
 ];

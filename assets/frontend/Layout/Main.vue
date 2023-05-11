@@ -15,14 +15,7 @@
 import {reactive, ref} from 'vue';
 import NavMenu from "../components/Utils/NavMenu.vue";
 
-const state = reactive({
-    txt: 'Main'
-});
-
-const activeIndex = ref('1');
-const handleSelect = (key, keyPath) => {
-    console.log(key, keyPath)
-}
+const state = reactive({});
 </script>
 
 <style scoped>
