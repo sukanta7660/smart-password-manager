@@ -31,7 +31,7 @@
         </el-menu-item>
         <el-menu-item
             v-else
-            index="0"
+            @click="handleLogout"
         >
             Logout
         </el-menu-item>
@@ -53,7 +53,26 @@ const currentRoutePath = computed(() => {
     return route.path;
 });
 
+const handleLogout = () => {
+    const dataToSubmit = {
+        action: 'logout',
+    }
+
+    const ajaxUrl = window.ajax_object.ajax_url;
+
+    window.jQuery.ajax({
+        url: ajaxUrl,
+        data: dataToSubmit,
+        method: 'POST'
+    }).done((response) => {
+        if (response) {
+            window.location.reload();
+        }
+    });
+};
+
 onMounted(() => {
+    isLoggedIn();
     router.isReady();
 });
 
