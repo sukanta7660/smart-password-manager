@@ -62,8 +62,6 @@
 
       const ajaxUrl = window.ajax_object.ajax_url;
 
-      console.log(window);
-
       window.jQuery.ajax({
           url: ajaxUrl,
           data: dataToSubmit,

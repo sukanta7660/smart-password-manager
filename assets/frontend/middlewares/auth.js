@@ -1,8 +1,10 @@
-const authenticated = (to, from, next) => {
-    let loginStatus = localStorage.getItem('isLoggedIn') || false;
-    if (!loginStatus) {
-        next({ name: 'Login' });
+export const isLoggedIn = () => {
+    return window.ajax_object.is_logged_in;
+};
 
+const authenticated = (to, from, next) => {
+    if (!isLoggedIn()) {
+        next({ name: 'Login' });
     } else {
         next()
     }

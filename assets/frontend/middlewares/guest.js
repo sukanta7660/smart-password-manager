@@ -1,10 +1,11 @@
+import {isLoggedIn} from './auth';
+
 const guest = (to, from, next) => {
     let loginStatus = localStorage.getItem('isLoggedIn') || false;
-    if (loginStatus) {
-        next({ name: 'Home' });
-
+    if (isLoggedIn()) {
+        next({ name: 'Dashboard' });
     } else {
-        next()
+        next();
     }
 }
 export default guest;

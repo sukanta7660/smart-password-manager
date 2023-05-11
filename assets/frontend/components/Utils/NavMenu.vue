@@ -22,11 +22,18 @@
         </el-menu-item>
 
         <el-menu-item
+            v-if="!isLoggedIn"
             v-for="route in guestRoutes"
             :index="route.path "
             :class="currentRoutePath === route.path ? 'is-active' : ''"
         >
             {{ route.name }}
+        </el-menu-item>
+        <el-menu-item
+            v-else
+            index="0"
+        >
+            Logout
         </el-menu-item>
     </el-menu>
 </template>
@@ -35,6 +42,8 @@
 import {computed, reactive, ref, onMounted} from 'vue';
 import {routes, guestRoutes} from '../../utils/routeMap';
 import {useRoute, useRouter} from 'vue-router';
+import {isLoggedIn} from '../../middlewares/auth';
+
 const activeIndex = ref('1');
 
 const route = useRoute();

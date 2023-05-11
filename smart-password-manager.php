@@ -27,21 +27,27 @@ along with Smart Password Manager. If not, write to the free software.
 Copyright 2019 Smart Password Manager LLC. All rights reserved.
 */
 
-require_once 'lib/shortcodes.php';
-
-require_once 'lib/Classes/Credential.php';
-require_once 'lib/Classes/Folder.php';
-
 if (!defined('ABSPATH')) {
   exit;
 }
 
-class SmartPasswordManager {
+require_once 'includes/shortcodes.php';
+
+require_once 'includes/Classes/Credential.php';
+require_once 'includes/Classes/Folder.php';
+require_once 'includes/Classes/Authentication.php';
+
+$auth = new \Classes\Authentication();
+
+class SmartPasswordManager extends \Classes\Authentication {
 
     public string $plugin;
 
   function __construct() {
       $this->plugin = plugin_basename(__FILE__);
+
+      add_action( 'wp_ajax_check_login', [$this, 'checkLogin']);
+
 
       add_action( 'wp_ajax_check_master_password', [$this, 'checkMasterPassword']);
 

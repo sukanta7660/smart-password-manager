@@ -7,6 +7,7 @@ import PasswordGenerator from '../pages/Password/PasswordGenerator.vue';
 import authenticated from '../middlewares/auth';
 import Login from '../pages/Auth/Login.vue';
 import Register from '../pages/Auth/Register.vue';
+import guest from '../middlewares/guest';
 
 const routes = [
     {
@@ -14,30 +15,36 @@ const routes = [
         publicPath: '/',
         name: 'Login',
         component: Login,
+        beforeEnter: (to, from, next) => {
+            guest(to, from, next)
+        }
     },
     {
         path: '/register',
         publicPath: '/',
         name: 'Register',
         component: Register,
+        beforeEnter: (to, from, next) => {
+            guest(to, from, next)
+        }
     },
     {
         path: '/',
         publicPath: '/',
         name: 'Dashboard',
         component: Dashboard,
-        // beforeEnter: (to, from, next) => {
-        //     authenticated(to, from, next)
-        // }
+        beforeEnter: (to, from, next) => {
+            authenticated(to, from, next)
+        }
     },
     {
         path: '/folders',
         publicPath: '/',
         name: 'FolderMain',
         component: FolderMain,
-        // beforeEnter: (to, from, next) => {
-        //     authenticated(to, from, next)
-        // }
+        beforeEnter: (to, from, next) => {
+            authenticated(to, from, next)
+        }
     },
 
     {
@@ -45,18 +52,18 @@ const routes = [
         publicPath: '/',
         name: 'CredentialMain',
         component: CredentialMain,
-        // beforeEnter: (to, from, next) => {
-        //     authenticated(to, from, next)
-        // }
+        beforeEnter: (to, from, next) => {
+            authenticated(to, from, next)
+        }
     },
     {
         path: '/password',
         publicPath: '/',
         name: 'PasswordGenerator',
         component: PasswordGenerator,
-        // beforeEnter: (to, from, next) => {
-        //     authenticated(to, from, next)
-        // }
+        beforeEnter: (to, from, next) => {
+            authenticated(to, from, next)
+        }
     }
 ];
 
