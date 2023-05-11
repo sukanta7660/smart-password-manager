@@ -44,7 +44,32 @@
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
+  padding: 5px;
 }
 .el-notification {
   margin-top: 30px !important;
+}
+
+//Auth Container
+.custom-container {
+  margin: auto;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-form {
+  margin: auto auto;
+  width: 35rem;
+  padding: 30px;
+  border-radius: 10px;
+
+  h4 {
+    text-align: center;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #706e6e;
+    text-transform: uppercase;
+  }
+
 }

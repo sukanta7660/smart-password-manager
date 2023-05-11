@@ -20,12 +20,20 @@
         >
             {{ route.name }}
         </el-menu-item>
+
+        <el-menu-item
+            v-for="route in guestRoutes"
+            :index="route.path "
+            :class="currentRoutePath === route.path ? 'is-active' : ''"
+        >
+            {{ route.name }}
+        </el-menu-item>
     </el-menu>
 </template>
 
 <script setup>
 import {computed, reactive, ref, onMounted} from 'vue';
-import {routes} from '../../utils/routeMap';
+import {routes, guestRoutes} from '../../utils/routeMap';
 import {useRoute, useRouter} from 'vue-router';
 const activeIndex = ref('1');
 

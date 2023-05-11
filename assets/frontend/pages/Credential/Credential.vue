@@ -174,6 +174,7 @@ const closeMasterPasswordModalHandler = () => {
 
 const handleCreateCredential = () => {
     state.showCreateUpdate = !state.showCreateUpdate;
+    state.selectedField = {};
 };
 
 const handleUpdateHandler = () => {
