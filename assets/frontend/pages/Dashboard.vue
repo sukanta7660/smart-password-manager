@@ -1,7 +1,7 @@
 <template>
     <Breadcrumb current-page="Dashboard"/>
 
-    <el-row :gutter="20" style="width: 100%">
+    <el-row :gutter="10" style="width: 100%">
         <el-col :span="8">
             <el-card
                 class="card-content"
@@ -96,8 +96,6 @@
   };
 
   onMounted(() => {
-
-      // console.log(window.jQuery.ajax);
       getData();
   });
 </script>

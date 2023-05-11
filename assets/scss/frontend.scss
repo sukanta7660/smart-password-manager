@@ -5,3 +5,46 @@
 #user-platform {
   margin-block-start: 0 !important;
 }
+
+.mt-4 {
+  margin-top: 20px;
+}
+.ptb-10 {
+  padding: 10px 0;
+}
+.el-row {
+  margin-bottom: 20px;
+}
+.el-row:last-child {
+  margin-bottom: 0;
+}
+.el-col {
+  border-radius: 4px;
+}
+
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+}
+.aligncenter {
+  text-align: center;
+}
+
+//element plus customize
+.el-input__wrapper {
+  padding: 0 !important;
+}
+
+.dialog-footer-btns {
+  display: flex;
+  justify-content: end;
+  margin-top: 2rem;
+}
+.el-input__inner, .el-input__inner:focus {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.el-notification {
+  margin-top: 30px !important;
+}

@@ -4,8 +4,7 @@ function getPageContainer () {
     ob_start();
 
     ?>
-        <div id="user-platform">
-        </div>
+        <div id="user-platform"></div>
     <?php
     wp_enqueue_script('frontendJquery', 'https://code.jquery.com/jquery-3.6.4.min.js');
     wp_enqueue_style('frontendStyles', plugins_url('../public/css/frontend.css', __FILE__ ));
