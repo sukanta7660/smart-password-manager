@@ -4,18 +4,16 @@ function getPageContainer () {
     ob_start();
 
     ?>
-        <style>
-            .wp-site-blocks {
-                padding: 0 !important;
-            }
-            #user-platform {
-                margin-block-start: 0 !important;
-            }
-        </style>
-        <div id="user-platform"></div>
+        <div id="user-platform">
+        </div>
     <?php
+    wp_enqueue_script('frontendJquery', 'https://code.jquery.com/jquery-3.6.4.min.js');
+    wp_enqueue_style('frontendStyles', plugins_url('../public/css/frontend.css', __FILE__ ));
+    wp_enqueue_script('frontendScripts', plugins_url('../public/frontend/main.js', __FILE__ ), [], false, true);
+    wp_localize_script( 'frontendScripts', 'ajax_object', ['ajax_url' => admin_url( 'admin-ajax.php' ), 'we_value' => 1234 ] );
 
-    return ob_get_clean();
+
+    echo ob_get_clean();
 }
 
 add_shortcode('platform_container', 'getPageContainer');

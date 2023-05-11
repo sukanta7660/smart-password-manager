@@ -29,6 +29,9 @@ Copyright 2019 Smart Password Manager LLC. All rights reserved.
 
 require_once 'lib/shortcodes.php';
 
+require_once 'lib/Classes/Credential.php';
+require_once 'lib/Classes/Folder.php';
+
 if (!defined('ABSPATH')) {
   exit;
 }
