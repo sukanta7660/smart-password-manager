@@ -23,6 +23,18 @@ class Authentication
 
     }
 
+    // Register Functionality
+    public function signup()
+    {
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+        var_dump($_POST);
+        die();
+
+    }
+
     //Logout Functionality
     public function logout () {
         return wp_logout();

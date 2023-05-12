@@ -6,6 +6,7 @@ function getPageContainer () {
     ?>
         <div id="user-platform"></div>
     <?php
+
     wp_enqueue_script('frontendJquery', 'https://code.jquery.com/jquery-3.6.4.min.js');
     wp_enqueue_style('frontendStyles', plugins_url('../public/css/frontend.css', __FILE__ ));
     wp_enqueue_script('frontendScripts', plugins_url('../public/frontend/main.js', __FILE__ ), [], false, true);

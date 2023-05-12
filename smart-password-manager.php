@@ -48,6 +48,9 @@ class SmartPasswordManager extends \Classes\Authentication {
 
       add_action( 'wp_ajax_logout', [$this, 'logout']);
       add_action( 'wp_ajax_nopriv_login', [$this, 'login']);
+      add_action( 'wp_ajax_nopriv_register', function () {
+          return wp_send_json('knkjsn');
+      });
 
 
       add_action( 'wp_ajax_check_master_password', [$this, 'checkMasterPassword']);
@@ -345,8 +348,10 @@ class SmartPasswordManager extends \Classes\Authentication {
 }
 
   if ( class_exists('SmartPasswordManager') ) {
-    $smartPasswordManager = new SmartPasswordManager();
-    $smartPasswordManager->register();
+//    add_action('init', function () {
+        $smartPasswordManager = new SmartPasswordManager();
+        $smartPasswordManager->register();
+//    });
   }
 
   // Activation

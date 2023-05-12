@@ -1,0 +1,16 @@
+{
+    "name": "sukanta/smart-password-manager",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "SmartPasswordManager\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Sukanta Purkayastha",
+            "email": "spurkayastha83@gmail.com"
+        }
+    ]
+}
