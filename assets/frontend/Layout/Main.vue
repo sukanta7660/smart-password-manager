@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import {reactive, ref} from 'vue';
+import {reactive} from 'vue';
 import NavMenu from "../components/Utils/NavMenu.vue";
 
 const state = reactive({});

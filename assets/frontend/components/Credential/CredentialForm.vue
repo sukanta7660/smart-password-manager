@@ -87,7 +87,7 @@
 
             <el-form-item label="Notes">
                 <el-input
-                    v-mode="form.notes"
+                    v-model="form.notes"
                     autocomplete="off"
                 />
             </el-form-item>

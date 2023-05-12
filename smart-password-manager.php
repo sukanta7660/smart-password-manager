@@ -47,6 +47,7 @@ class SmartPasswordManager extends \Classes\Authentication {
       $this->plugin = plugin_basename(__FILE__);
 
       add_action( 'wp_ajax_logout', [$this, 'logout']);
+      add_action( 'wp_ajax_nopriv_login', [$this, 'login']);
 
 
       add_action( 'wp_ajax_check_master_password', [$this, 'checkMasterPassword']);

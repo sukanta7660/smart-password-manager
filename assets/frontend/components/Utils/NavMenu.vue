@@ -14,26 +14,27 @@
         </el-menu-item>
         <div class="flex-grow" />
         <el-menu-item
+            v-if="isLoggedIn()"
             v-for="route in routes"
             :index="route.path "
             :class="currentRoutePath === route.path ? 'is-active' : ''"
         >
             {{ route.name }}
         </el-menu-item>
+        <el-menu-item
+            v-if="isLoggedIn()"
+            @click="handleLogout"
+        >
+            Logout
+        </el-menu-item>
 
         <el-menu-item
-            v-if="!isLoggedIn"
+            v-if="!isLoggedIn()"
             v-for="route in guestRoutes"
             :index="route.path "
             :class="currentRoutePath === route.path ? 'is-active' : ''"
         >
             {{ route.name }}
-        </el-menu-item>
-        <el-menu-item
-            v-else
-            @click="handleLogout"
-        >
-            Logout
         </el-menu-item>
     </el-menu>
 </template>
