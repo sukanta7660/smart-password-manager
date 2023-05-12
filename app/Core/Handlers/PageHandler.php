@@ -2,7 +2,7 @@
 
 namespace SmartPasswordManager\Core\Handlers;
 
-class MenuHandler
+class PageHandler
 {
     public function __construct()
     {

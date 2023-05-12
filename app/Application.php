@@ -2,7 +2,7 @@
 
 namespace SmartPasswordManager;
 
-use SmartPasswordManager\Core\Handlers\MenuHandler;
+use SmartPasswordManager\Core\Handlers\PageHandler;
 
 class Application
 {
@@ -14,7 +14,7 @@ class Application
 
     public function __construct($file)
     {
-        (new MenuHandler);
+        (new PageHandler);
     }
 
     final public function boot()
