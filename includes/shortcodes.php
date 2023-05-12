@@ -18,4 +18,4 @@ function getPageContainer () {
     echo ob_get_clean();
 }
 
-add_shortcode('platform_container', 'getPageContainer');
+add_shortcode('user_page_container', 'getPageContainer');

@@ -1,7 +1,5 @@
 <template>
     <div id="credential-div">
-        <Breadcrumb current-page="Credential"/>
-
         <el-row class="mt-4">
             <el-button
                 @click="handleCreateCredential"

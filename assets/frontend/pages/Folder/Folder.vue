@@ -1,7 +1,5 @@
 <template>
   <div id="folder-div">
-      <Breadcrumb current-page="Folders"/>
-
       <el-row class="mt-4">
           <el-button type="primary" @click="handleCreateFolder">
               Add New

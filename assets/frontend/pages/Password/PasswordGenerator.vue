@@ -1,6 +1,5 @@
 <template>
     <div class="password-generate">
-        <Breadcrumb current-page="Password Generator"/>
 
         <el-row :gutter="20" class="mt-4" style="width: 100%">
             <el-col :span="24">

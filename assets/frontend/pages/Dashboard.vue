@@ -1,21 +1,7 @@
 <template>
-    <Breadcrumb current-page="Dashboard"/>
 
     <el-row :gutter="10" style="width: 100%">
-        <el-col :span="8">
-            <el-card
-                class="card-content"
-                body-style="danger"
-                shadow="hover">
-                <h1>
-                    Total User
-                </h1>
-                <h1>
-                    {{ state.users }}
-                </h1>
-            </el-card>
-        </el-col>
-        <el-col :span="8">
+        <el-col :span="12">
             <el-card
                 class="card-content"
                 body-style="danger"
@@ -28,7 +14,7 @@
                 </h1>
             </el-card>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="12">
             <el-card
                 class="card-content"
                 body-style="danger"
@@ -50,7 +36,6 @@
   import axios from 'axios';
 
   const state = reactive({
-      users: 0,
       folders: 0,
       credentials: 0
   });
