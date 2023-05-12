@@ -1,8 +1,8 @@
 <?php
 
-namespace Request;
+namespace SmartPasswordManager\Core\Database;
 
 class Request
 {
-
+    //
 }

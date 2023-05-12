@@ -1,5 +1,5 @@
 <?php
-namespace SmartPasswordManager\Core\Migrator;
+namespace SmartPasswordManager\Core\Database;
 class Migrator
 {
     public function migrate()

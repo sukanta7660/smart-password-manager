@@ -1,11 +1,14 @@
 {
     "name": "sukanta/smart-password-manager",
     "type": "project",
-    "license": "MIT",
+    "license": "GPL V2 or later",
     "autoload": {
         "psr-4": {
             "SmartPasswordManager\\": "app/"
-        }
+        },
+        "files": [
+            "Helpers/helpers.php"
+        ]
     },
     "authors": [
         {
