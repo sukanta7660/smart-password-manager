@@ -1,9 +1,18 @@
 <?php
 namespace SmartPasswordManager\Core\Database;
+use SmartPasswordManager\Core\Database\Migrations\CredentialMigrator;
+use SmartPasswordManager\Core\Database\Migrations\FolderMigrator;
+
 class Migrator
 {
-    public function migrate()
+    public static function run()
     {
-        
+        self::migrate();
+    }
+
+    public static function migrate()
+    {
+        FolderMigrator::migrate();
+        CredentialMigrator::migrate();
     }
 }

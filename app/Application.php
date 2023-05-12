@@ -1,7 +1,8 @@
 <?php
 
 namespace SmartPasswordManager;
-use SmartPasswordManager\Traits\ApplicationContract;
+
+use SmartPasswordManager\Core\Handlers\MenuHandler;
 
 class Application
 {
@@ -13,7 +14,7 @@ class Application
 
     public function __construct($file)
     {
-
+        (new MenuHandler);
     }
 
     final public function boot()
