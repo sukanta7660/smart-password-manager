@@ -11,10 +11,17 @@
       <el-row :gutter="20" class="mt-4" style="width: 100%">
           <el-col :span="24">
               <el-card>
-                  <el-table :data="state.tableData">
+                  <el-table :data="filterableTableData">
                       <el-table-column prop="created_at" label="Date" />
                       <el-table-column prop="folder" label="Name" />
-                      <el-table-column label="Action" >
+                      <el-table-column align="right" >
+                          <template #header>
+                              <el-input
+                                  clearable
+                                  v-model="search"
+                                  placeholder="Type to search"
+                              />
+                          </template>
                           <template #default="scope">
                               <el-button
                                   type="primary"
@@ -45,18 +52,19 @@
 </template>
 
 <script setup>
-import {onMounted, reactive} from 'vue';
+import {computed, onMounted, reactive, ref} from 'vue';
 import Breadcrumb from "../../components/Utils/BreadCrumb.vue";
 import {confirmDelete, formatDateTime, notify} from '../../utils/helpers';
 import FolderForm from '../../components/Folder/FolderForm.vue';
 
     const state = reactive({
         folders: [],
-        tableData: [],
         showCreateUpdate: false,
         isUpdating: false,
         selectedField: {}
     });
+
+    const search = ref('');
 
     const fetchFolders = () => {
 
@@ -71,7 +79,6 @@ import FolderForm from '../../components/Folder/FolderForm.vue';
             data: dataToSubmit,
             method: 'POST'
         }).done((response) => {
-            state.folders = response;
             formatFolderTableData(response);
         });
 
@@ -100,7 +107,7 @@ import FolderForm from '../../components/Folder/FolderForm.vue';
             return;
         }
 
-       state.tableData = data.map((folder) => {
+       state.folders = data.map((folder) => {
            return {
                id: folder.id,
                folder: folder.name,
@@ -135,6 +142,12 @@ import FolderForm from '../../components/Folder/FolderForm.vue';
            confirmDelete({ onConfirm: () => deleteFolder(data.id) });
        }
    };
+
+    const filterableTableData = computed(() => {
+        return state.folders?.filter(
+            (data) => !search.value || data.folder.toLocaleLowerCase().includes(search.value.toLowerCase())
+        );
+    });
 
     const getData = () => {
         fetchFolders();
