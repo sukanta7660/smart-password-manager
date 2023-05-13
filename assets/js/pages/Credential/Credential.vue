@@ -1,7 +1,5 @@
 <template>
     <div id="credential-div">
-        <Breadcrumb current-page="Credential"/>
-
         <el-row class="mt-4">
             <el-button
                 @click="handleCreateCredential"
@@ -35,12 +33,19 @@
         <el-row :gutter="20" class="mt-4" style="width: 100%">
             <el-col :span="24">
                 <el-card>
-                    <el-table :data="state.tableData">
-                        <el-table-column prop="created_at" label="Date" />
-                        <el-table-column prop="type" label="Type" />
-                        <el-table-column prop="name" label="Name" />
-                        <el-table-column prop="username" label="Username" />
-                        <el-table-column label="Action" >
+                    <el-table :data="filterableTableData">
+                        <el-table-column prop="created_at" label="Date" sortable/>
+                        <el-table-column prop="type" label="Type" sortable/>
+                        <el-table-column prop="name" label="Name" sortable/>
+                        <el-table-column prop="username" label="Username" sortable/>
+                        <el-table-column align="right">
+                            <template #header>
+                                <el-input
+                                    clearable
+                                    v-model="search"
+                                    placeholder="Type to search"
+                                />
+                            </template>
                             <template #default="scope">
                                 <el-button
                                     type="primary"
@@ -83,7 +88,7 @@
 </template>
 
 <script setup>
-import {onMounted, reactive} from 'vue';
+import {computed, onMounted, reactive, ref} from 'vue';
 import Breadcrumb from '../../components/Utils/BreadCrumb.vue';
 import {confirmDelete, exportCsv, formatDateTime, notify} from '../../utils/helpers';
 import CredentialForm from '../../components/Credential/CredentialForm.vue';
@@ -100,8 +105,11 @@ const state = reactive({
     showCreateUpdate: false,
     showMasterPasswordForm: false,
     isUpdating: false,
-    selectedField: {}
+    selectedField: {},
+    search: null
 });
+
+const search = ref('');
 
 const fetchCredentials = () => {
 
@@ -116,7 +124,6 @@ const fetchCredentials = () => {
         data: dataToSubmit,
         method: 'POST'
     }).done((response) => {
-        state.credentials = response;
         formatCredentialTableData(response);
     });
 
@@ -145,7 +152,7 @@ const formatCredentialTableData = (data = []) => {
         return;
     }
 
-    state.tableData = data.map((credential) => {
+    state.credentials = data.map((credential) => {
         return {
             id: credential.id,
             folder_id: credential.folder_id,
@@ -237,6 +244,12 @@ const handleExportCsv = () => {
     exportCsv(data, fileName);
 
 };
+
+const filterableTableData = computed(() => {
+    return state.credentials?.filter(
+        (data) => !search.value || data.name.toLocaleLowerCase().includes(search.value.toLowerCase())
+    );
+});
 
 const getData = () => {
     fetchCredentials();
