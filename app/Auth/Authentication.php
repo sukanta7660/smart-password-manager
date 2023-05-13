@@ -1,10 +1,19 @@
 <?php
 
-namespace Classes;
+namespace SmartPasswordManager\Auth;
 
-class Authentication
+use SmartPasswordManager\Modules\Concern\Module;
+
+class Authentication implements Module
 {
-    // Login Functionality
+
+    public function register()
+    {
+        add_action( 'wp_ajax_nopriv_login', [$this, 'login']);
+        add_action( 'wp_ajax_nopriv_register', [$this, 'signup']);
+        add_action( 'wp_ajax_logout', [$this, 'logout']);
+    }
+
     public function login()
     {
         $credentials = [
