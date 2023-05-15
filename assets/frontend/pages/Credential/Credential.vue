@@ -1,4 +1,5 @@
 <template>
+    <Breadcrumb current-page="Credential"/>
     <div id="credential-div">
         <el-row class="mt-4">
             <el-button
@@ -15,15 +16,15 @@
                 Export as CSV
             </el-button>
 
-            <el-button
-                @click="handleCreateCredential"
-                :icon="UploadFilled"
-                type="primary">
-                Import CSV File
-            </el-button>
+<!--            <el-button-->
+<!--                @click="handleCreateCredential"-->
+<!--                :icon="UploadFilled"-->
+<!--                type="primary">-->
+<!--                Import CSV File-->
+<!--            </el-button>-->
 
             <el-button
-                @click="handleCreateCredential"
+                @click="handleMoveCredential"
                 :icon="FolderRemove"
                 type="primary">
                 Move selected item
@@ -90,6 +91,15 @@
             :on-success-handler="handleUpdateHandler"
         />
 
+        <!--Credential Move Form-->
+        <MoveCredentialForm
+            :folders="state.folders"
+            :selected-items="selectedItems.length ? selectedItems : []"
+            :modal-show="state.showMoveCredentialForm"
+            :close-modal-handler="closeMoveCredentialModalHandler"
+            :on-success-handler="handleSuccessMove"
+        />
+
     </div>
 </template>
 
@@ -103,13 +113,16 @@ import {
     Plus, Download, UploadFilled, FolderRemove,
     Delete, Edit
 } from '@element-plus/icons-vue'
+import MoveCredentialForm from "../../components/Credential/MoveCredentialForm.vue";
 
 const state = reactive({
     credentials: [],
+    selectedItems: [],
     folders: [],
     tableData: [],
     showCreateUpdate: false,
     showMasterPasswordForm: false,
+    showMoveCredentialForm: false,
     isUpdating: false,
     selectedField: {},
     search: null
@@ -188,14 +201,32 @@ const closeMasterPasswordModalHandler = () => {
     state.showMasterPasswordForm = false;
 };
 
+const closeMoveCredentialModalHandler = () => {
+    state.showMoveCredentialForm = false;
+};
+
 const handleCreateCredential = () => {
     state.showCreateUpdate = !state.showCreateUpdate;
     state.selectedField = {};
 };
 
+const handleMoveCredential = () => {
+    if (!selectedItems.value.length) {
+        notify('error', 'Please select item first')
+    } else {
+        state.showMoveCredentialForm = !state.showMoveCredentialForm;
+        state.selectedItems = selectedItems.value;
+    }
+};
+
 const handleUpdateHandler = () => {
     state.isUpdating = true;
     state.showCreateUpdate = true;
+};
+
+const handleSuccessMove = () => {
+    fetchCredentials();
+    selectedItems.value = [];
 };
 
 const deleteCredential = (id) => {

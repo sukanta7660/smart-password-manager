@@ -26,7 +26,11 @@ class Credentials implements Module
         $table = $wpdb->prefix . static::$credentialTableName;
         $userTable = $wpdb->prefix . static::$userTableName;
 
-        $credentials = $wpdb->get_results ( "SELECT * FROM $table, $userTable WHERE $userTable.ID = $table.user_id");
+        $user = wp_get_current_user();
+
+        $credentials = $wpdb->get_results (
+            "SELECT * FROM $table, $userTable WHERE $userTable.ID = $table.user_id AND $table.user_id = $user->ID"
+        );
         return wp_send_json($credentials);
     }
 

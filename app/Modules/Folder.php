@@ -22,7 +22,11 @@ class Folder implements Module
         $table = $wpdb->prefix . static::$folderTableName;
         $userTable = $wpdb->prefix . static::$userTableName;
 
-        $folders = $wpdb->get_results ( "SELECT * FROM $table, wp_users WHERE $userTable.ID = $table.user_id ");
+        $user = wp_get_current_user();
+
+        $folders = $wpdb->get_results (
+            "SELECT * FROM $table, wp_users WHERE $userTable.ID = $table.user_id AND $table.user_id = $user->ID"
+        );
         return wp_send_json($folders);
     }
 

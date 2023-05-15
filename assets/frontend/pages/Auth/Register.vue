@@ -128,7 +128,7 @@ const formSubmit = async () => {
         data: dataToSubmit,
         method: 'POST'
     }).done((response) => {
-        console.info(response)
+        window.location.reload();
 
     }).fail((error) => {
         console.warn('check');

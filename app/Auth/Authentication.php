@@ -39,9 +39,20 @@ class Authentication implements Module
         $email = sanitize_email($_POST['email']);
         $password = sanitize_text_field($_POST['password']);
 
-        var_dump($_POST);
-        die();
+        if (!email_exists($email) && !username_exists($username)) {
+            $response = wp_create_user($username, $password, $email);
 
+            if ($response) {
+                wp_signon([
+                    'user_login' => $username,
+                    'user_password' => $password,
+                    'remember' => true
+                ]);
+            }
+
+        }else {
+            return wp_send_json(['message' => 'Username or email already exists'], 422);
+        }
     }
 
     //Logout Functionality

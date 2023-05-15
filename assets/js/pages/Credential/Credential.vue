@@ -16,12 +16,12 @@
                 Export as CSV
             </el-button>
 
-            <el-button
-                @click="handleCreateCredential"
-                :icon="UploadFilled"
-                type="primary">
-                Import CSV File
-            </el-button>
+<!--            <el-button-->
+<!--                @click="handleCreateCredential"-->
+<!--                :icon="UploadFilled"-->
+<!--                type="primary">-->
+<!--                Import CSV File-->
+<!--            </el-button>-->
 
             <el-button
                 @click="handleMoveCredential"
