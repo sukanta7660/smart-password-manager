@@ -1,6 +1,6 @@
 <?php
 
-namespace SmartPasswordManager\Core\Handlers;
+namespace SmartPasswordManager\hooks\Handlers;
 
 class PageHandler
 {

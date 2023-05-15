@@ -31,7 +31,7 @@ class Folder implements Module
         global $wpdb;
         $table = $wpdb->prefix . static::$folderTableName;
         $user = wp_get_current_user();
-        $name = $_POST['name'];
+        $name = sanitize_text_field($_POST['name']);
 
         $wpdb->insert($table, [
             'user_id'    => $user->ID,
@@ -45,7 +45,7 @@ class Folder implements Module
     {
         global $wpdb;
         $table = $wpdb->prefix . static::$folderTableName;
-        $name = $_POST['name'];
+        $name = sanitize_text_field($_POST['name']);
 
         $wpdb->update($table, [
             'name'       => $name,

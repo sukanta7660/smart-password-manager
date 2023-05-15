@@ -1,6 +1,6 @@
 <?php
 
-namespace SmartPasswordManager\Core\Database\Migrations;
+namespace SmartPasswordManager\Database\Migrations;
 
 class CredentialMigrator
 {

@@ -17,9 +17,9 @@ class Authentication implements Module
     public function login()
     {
         $credentials = [
-            'user_login' => $_POST['username'],
-            'user_password' => $_POST['password'],
-            'remember' => $_POST['remember']
+            'user_login' => sanitize_text_field($_POST['username']),
+            'user_password' => sanitize_text_field($_POST['password']),
+            'remember' => rest_sanitize_boolean($_POST['remember'])
         ];
 
         $response = wp_signon($credentials);
@@ -35,9 +35,9 @@ class Authentication implements Module
     // Register Functionality
     public function signup()
     {
-        $username = $_POST['username'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
+        $username = sanitize_text_field($_POST['username']);
+        $email = sanitize_email($_POST['email']);
+        $password = sanitize_text_field($_POST['password']);
 
         var_dump($_POST);
         die();

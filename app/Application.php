@@ -2,9 +2,8 @@
 
 namespace SmartPasswordManager;
 
-use SmartPasswordManager\Auth\Authentication;
-use SmartPasswordManager\Core\Handlers\PageHandler;
-use SmartPasswordManager\Core\Handlers\ShortCodeHandler;
+use SmartPasswordManager\hooks\Handlers\PageHandler;
+use SmartPasswordManager\hooks\Handlers\ShortCodeHandler;
 
 class Application
 {

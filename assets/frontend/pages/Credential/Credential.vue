@@ -33,7 +33,13 @@
         <el-row :gutter="20" class="mt-4" style="width: 100%">
             <el-col :span="24">
                 <el-card>
-                    <el-table :data="filterableTableData">
+                    <el-table
+                        ref="selectedItems"
+                        stripe
+                        :data="filterableTableData"
+                        @selection-change="handleSelectionChange"
+                    >
+                        <el-table-column type="selection"/>
                         <el-table-column prop="created_at" label="Date" sortable/>
                         <el-table-column prop="type" label="Type" sortable/>
                         <el-table-column prop="name" label="Name" sortable/>
@@ -110,6 +116,7 @@ const state = reactive({
 });
 
 const search = ref('');
+const selectedItems = ref([]);
 
 const fetchCredentials = () => {
 
@@ -156,6 +163,7 @@ const formatCredentialTableData = (data = []) => {
         return {
             id: credential.id,
             folder_id: credential.folder_id,
+            user_id: credential.user_id,
             name: credential.name,
             username: credential.username,
             password: credential.password,
@@ -163,7 +171,8 @@ const formatCredentialTableData = (data = []) => {
             notes: credential.notes,
             type: credential.item_type,
             user: credential.display_name,
-            created_at: formatDateTime(credential.created_at)
+            created_at: formatDateTime(credential.created_at),
+            updated_at: formatDateTime(credential.created_at)
         }
     });
 
@@ -221,11 +230,16 @@ const handleAction = (action, data) => {
 
 const handleExportCsv = () => {
 
-    if (!state.credentials.length) {
+    const exportableData = selectedItems.value.length
+        ? selectedItems.value
+        : state.credentials
+    ;
+
+    if (!exportableData.length) {
         return;
     }
 
-    const data = state.credentials.map(item => ({
+    const data = exportableData.map(item => ({
         id: item.id,
         folder_id: item.folder_id,
         user_id: item.user_id,
@@ -243,6 +257,10 @@ const handleExportCsv = () => {
 
     exportCsv(data, fileName);
 
+};
+
+const handleSelectionChange = (val) => {
+    selectedItems.value = val;
 };
 
 const filterableTableData = computed(() => {

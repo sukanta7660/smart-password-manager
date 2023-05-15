@@ -2,8 +2,7 @@
 
 namespace SmartPasswordManager;
 
-use SmartPasswordManager\Core\Database\Migrator;
-use SmartPasswordManager\Core\Handlers\PageHandler;
+use SmartPasswordManager\Database\Migrator;
 
 class Activator
 {

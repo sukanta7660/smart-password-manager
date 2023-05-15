@@ -16,6 +16,7 @@ class Credentials implements Module
         add_action( 'wp_ajax_create_credential', [$this, 'store']);
         add_action( 'wp_ajax_update_credential', [$this, 'update']);
         add_action( 'wp_ajax_delete_credential', [$this, 'destroy']);
+        add_action( 'wp_ajax_move_credential', [$this, 'moveCredentialToFolder']);
     }
 
     public function fetch()
@@ -37,13 +38,13 @@ class Credentials implements Module
 
         $wpdb->insert($table, [
             'user_id'    => $user->ID,
-            'item_type'  => $_POST['item_type'],
-            'folder_id'  => $_POST['folder_id'] ?? null,
-            'name'       => $_POST['name'],
-            'username'   => $_POST['username'] ?? null,
-            'password'   => $_POST['password'] ?? null,
-            'url'        => $_POST['url'] ?? null,
-            'notes'      => $_POST['notes'] ?? null,
+            'item_type'  => sanitize_text_field($_POST['item_type']),
+            'folder_id'  => absint($_POST['folder_id']) ?? null,
+            'name'       => sanitize_text_field($_POST['name']),
+            'username'   => sanitize_text_field($_POST['username']) ?? null,
+            'password'   => sanitize_text_field($_POST['password']) ?? null,
+            'url'        => sanitize_url($_POST['url']) ?? null,
+            'notes'      => sanitize_text_field($_POST['notes']) ?? null,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
@@ -55,13 +56,13 @@ class Credentials implements Module
         $table = $wpdb->prefix . static::$credentialTableName;
 
         $wpdb->update($table, [
-            'item_type'  => $_POST['item_type'],
-            'folder_id'  => $_POST['folder_id'] ?? null,
-            'name'       => $_POST['name'],
-            'username'   => $_POST['username'] ?? null,
-            'password'   => $_POST['password'] ?? null,
-            'url'        => $_POST['url'] ?? null,
-            'notes'      => $_POST['notes'] ?? null,
+            'item_type'  => sanitize_text_field($_POST['item_type']),
+            'folder_id'  => absint($_POST['folder_id']) ?? null,
+            'name'       => sanitize_text_field($_POST['name']),
+            'username'   => sanitize_text_field($_POST['username']) ?? null,
+            'password'   => sanitize_text_field($_POST['password']) ?? null,
+            'url'        => sanitize_url($_POST['url']) ?? null,
+            'notes'      => sanitize_text_field($_POST['notes']) ?? null,
             'updated_at' => date('Y-m-d H:i:s'),
         ],
             ['id' => $_POST['id']]
@@ -87,5 +88,23 @@ class Credentials implements Module
         $passwordInput = $_POST['password'];
         $isMatched = wp_check_password($passwordInput, $user->user_pass, $user->ID);
         return wp_send_json($isMatched);
+    }
+
+    public function moveCredentialToFolder()
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . static::$credentialTableName;
+
+        $folder = $_POST['folder_id'] === "" ? null : $_POST['folder_id'];
+        $items = rest_sanitize_array($_POST['items']);
+
+        foreach ($items as $item) {
+            $wpdb->update($table, [
+                'folder_id'  => $folder,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+                ['id' => (int) $item]
+            );
+        }
     }
 }

@@ -1,4 +1,5 @@
 <template>
+    <Breadcrumb current-page="Credential"/>
     <div id="credential-div">
         <el-row class="mt-4">
             <el-button
@@ -23,7 +24,7 @@
             </el-button>
 
             <el-button
-                @click="handleCreateCredential"
+                @click="handleMoveCredential"
                 :icon="FolderRemove"
                 type="primary">
                 Move selected item
@@ -33,7 +34,13 @@
         <el-row :gutter="20" class="mt-4" style="width: 100%">
             <el-col :span="24">
                 <el-card>
-                    <el-table :data="filterableTableData">
+                    <el-table
+                        ref="selectedItems"
+                        stripe
+                        :data="filterableTableData"
+                        @selection-change="handleSelectionChange"
+                    >
+                        <el-table-column type="selection"/>
                         <el-table-column prop="created_at" label="Date" sortable/>
                         <el-table-column prop="type" label="Type" sortable/>
                         <el-table-column prop="name" label="Name" sortable/>
@@ -84,6 +91,15 @@
             :on-success-handler="handleUpdateHandler"
         />
 
+        <!--Credential Move Form-->
+        <MoveCredentialForm
+            :folders="state.folders"
+            :selected-items="selectedItems.length ? selectedItems : []"
+            :modal-show="state.showMoveCredentialForm"
+            :close-modal-handler="closeMoveCredentialModalHandler"
+            :on-success-handler="handleSuccessMove"
+        />
+
     </div>
 </template>
 
@@ -97,19 +113,23 @@ import {
     Plus, Download, UploadFilled, FolderRemove,
     Delete, Edit
 } from '@element-plus/icons-vue'
+import MoveCredentialForm from "../../components/Credential/MoveCredentialForm.vue";
 
 const state = reactive({
     credentials: [],
+    selectedItems: [],
     folders: [],
     tableData: [],
     showCreateUpdate: false,
     showMasterPasswordForm: false,
+    showMoveCredentialForm: false,
     isUpdating: false,
     selectedField: {},
     search: null
 });
 
 const search = ref('');
+const selectedItems = ref([]);
 
 const fetchCredentials = () => {
 
@@ -156,6 +176,7 @@ const formatCredentialTableData = (data = []) => {
         return {
             id: credential.id,
             folder_id: credential.folder_id,
+            user_id: credential.user_id,
             name: credential.name,
             username: credential.username,
             password: credential.password,
@@ -163,7 +184,8 @@ const formatCredentialTableData = (data = []) => {
             notes: credential.notes,
             type: credential.item_type,
             user: credential.display_name,
-            created_at: formatDateTime(credential.created_at)
+            created_at: formatDateTime(credential.created_at),
+            updated_at: formatDateTime(credential.created_at)
         }
     });
 
@@ -179,14 +201,32 @@ const closeMasterPasswordModalHandler = () => {
     state.showMasterPasswordForm = false;
 };
 
+const closeMoveCredentialModalHandler = () => {
+    state.showMoveCredentialForm = false;
+};
+
 const handleCreateCredential = () => {
     state.showCreateUpdate = !state.showCreateUpdate;
     state.selectedField = {};
 };
 
+const handleMoveCredential = () => {
+    if (!selectedItems.value.length) {
+        notify('error', 'Please select item first')
+    } else {
+        state.showMoveCredentialForm = !state.showMoveCredentialForm;
+        state.selectedItems = selectedItems.value;
+    }
+};
+
 const handleUpdateHandler = () => {
     state.isUpdating = true;
     state.showCreateUpdate = true;
+};
+
+const handleSuccessMove = () => {
+    fetchCredentials();
+    selectedItems.value = [];
 };
 
 const deleteCredential = (id) => {
@@ -221,11 +261,16 @@ const handleAction = (action, data) => {
 
 const handleExportCsv = () => {
 
-    if (!state.credentials.length) {
+    const exportableData = selectedItems.value.length
+        ? selectedItems.value
+        : state.credentials
+    ;
+
+    if (!exportableData.length) {
         return;
     }
 
-    const data = state.credentials.map(item => ({
+    const data = exportableData.map(item => ({
         id: item.id,
         folder_id: item.folder_id,
         user_id: item.user_id,
@@ -243,6 +288,10 @@ const handleExportCsv = () => {
 
     exportCsv(data, fileName);
 
+};
+
+const handleSelectionChange = (val) => {
+    selectedItems.value = val;
 };
 
 const filterableTableData = computed(() => {
